@@ -8,7 +8,7 @@ def cool(name_user):
         print("Добро пожаловать!")
     if name_user == "Леша":
         print("Добро пожаловать!")
-
+#hgjfhgj
 
 cool(name_user)
 
