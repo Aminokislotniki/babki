@@ -1,8 +1,20 @@
 
 {
-    "user":{"id_user":"958693574","user_name":"@tima_minski","rights":"","name":""},
-    "lots":[{"lot_id":"1","lot_name":"audi"},{"lot_id":"","lot_name":""}],
-    "not_posted_lots":[{"lot_id":"","lot_name":""},{"lot_id":"","lot_name":""}],
-    "arhive":[{"lot_id":"","lot_name":""},{"lot_id":"","lot_name":""}]
+    "user":{"id_user":"958693574",
+            "user_name":"@tima_minski",
+            "rights":"",
+            "name":""},
+    "lots":[
+            {"lot_id":"1", "lot_name":"audi"},
+            {"lot_id":"","lot_name":""}
+            ],
+    "not_posted_lots":[
+        {"lot_id":"","lot_name":""},
+        {"lot_id":"","lot_name":""}
+            ],
+    "arhive":[
+        {"lot_id":"","lot_name":""},
+        {"lot_id":"","lot_name":""}
+            ]
 }
 

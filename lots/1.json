@@ -1,7 +1,12 @@
 {
     "lot_name":"audi",
-    "parametrs":{"status":"activ", "id_admin":"2077212957", "id_inchanel":""},
+    "parametrs":{"status":"activ",
+                "id_admin":"2077212957",
+                "id_inchanel":""},
     "lot":"!!!!!!!!!!!",
     "winner":"@tima_minski",
-    "history":{"id_user": "958693574", "user_name": "@tima_minski", "price": "1000", "time": "1673986421"}
-}}
+    "history":{"id_user": "958693574",
+              "user_name": "@tima_minski",
+              "price": "1000",
+              "time": "1673986421"}
+}
