@@ -1,7 +1,7 @@
 {"1":{
-    "lot_name":"",
-    "parametrs":{"status":"", "id_admin":"", "id_inchanel":""},
+    "lot_name":"audi",
+    "parametrs":{"status":"activ", "id_admin":"2077212957", "id_inchanel":""},
     "lot":"!!!!!!!!!!!",
-    "winner":"",
-    "history":{"id_user": "", "user_name": "", "price": "", "time": ""}
+    "winner":"@tima_minski",
+    "history":{"id_user": "958693574", "user_name": "@tima_minski", "price": "1000", "time": "17.01.2023"}
 }}
