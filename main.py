@@ -1,6 +1,6 @@
 import json
 from variables import bot
-from keyboards import type_of_lots_keyboard
+from keyboards import type_of_lots_keyboard, active_lots_keyboard
 from services_func import fs_serj, dt_serj
 
 
@@ -23,7 +23,7 @@ def call(call):
             page = data.split("*")
             page = int(page[1])
             try:
-                name_file ="vocabulary/"  + str(call.from_user.id) + ".json"
+                name_file = "vocabulary/" + str(call.from_user.id) + ".json"
                 f = open(name_file, 'r', encoding='utf-8')
                 buf_admin_file = json.loads(f.read())
                 f.close()

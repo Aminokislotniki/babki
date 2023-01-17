@@ -8,7 +8,7 @@ type_of_lots_keyboard.add(active_lots, nonpublic_lots, archive_lots)
 
 
 def active_lots_keyboard(active_lots_list, page_number):
-    keyboard = InlineKeyboardMarkup(row_width=2)
+    keyboard = InlineKeyboardMarkup(row_width=3)
     backbutton = InlineKeyboardButton(text="назад", callback_data="sa*" + str(page_number-1))
     nextbutton = InlineKeyboardButton(text="вперед", callback_data="sa*" + str(page_number+1))
     if len(active_lots_list) < 10:
