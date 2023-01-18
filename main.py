@@ -47,6 +47,7 @@ def call(call):
         print("here archived lots")
 
 
+
 print("Ready")
 bot.infinity_polling()
 
