@@ -88,7 +88,7 @@ def star_new_car(message):
     #     msg = bot.send_message(message.chat.id, text)
     #     bot.register_next_step_handler(msg, photo_car)
 
-
+11
 
 
 print("Ready")
