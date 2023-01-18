@@ -71,4 +71,26 @@ def call(call):
         stavka_back(call.id)
 
     if flag == "li":
-        information()
+        information(call.id)
+
+@bot.message_handler(commands=['new_car'])
+def star_new_car(message):
+    global car_init_dict
+    my_id = str(message.from_user.id)
+    if access_check(my_id) == '2' or access_check(my_id) == '1':
+        car_init_dict[message.chat.id] = ""
+        text = "Для добавления нового авто - нужно будет заполнить все сведения о нём\n" \
+                "Для этого нужно пройтись по дальнейшим шагам \nудачи :)\n\n" \
+                "Начнём с марки Авто - напишите на английском МАРКУ авто\n\n" \
+                "Пример1 - BWM\n" \
+                "Пример2 - Alfa Romeo"
+
+        msg = bot.send_message(message.chat.id, text)
+        bot.register_next_step_handler(msg, photo_car)
+
+
+
+
+print("Ready")
+
+bot.infinity_polling()
