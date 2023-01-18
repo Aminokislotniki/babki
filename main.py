@@ -12,7 +12,6 @@ def view_lots(message):
     bot.send_message(message.chat.id, "Выберите тип лота, который вы хотите просмотреть", reply_markup=type_of_lots_keyboard)\
 
 
-
 @bot.callback_query_handler(func=lambda call: True)
 def call(call):
     print(call.data)
