@@ -7,13 +7,20 @@ bot = telebot.TeleBot('5683069905:AAGVpQBnaKoilz2UYWK1Ug3XoAENmDsTUyc')
 id_chanel = "@sandbox_chanell"
 lot_init_dict={}
 
-# Класс нужный для добавления  от админов
-bot.send_message(id_chanel, "А как тут команды вызвать?")
 
-@bot.message_handler(commands=['start'])
-def welcome(message):
-    bot.send_message(id_chanel,"Привет")
+#bot.send_message(id_chanel, "А как тут команды вызвать?")
 
+@bot.message_handler(commands=['new_lot'])
+def star_new_car(message):
+    global lot_init_dict
+
+    lot_init_dict[message.chat.id] = ""
+    text = "Для добавления нового лота - нужно будет заполнить все сведения о нём\n" \
+            "Для этого нужно пройтись по дальнейшим шагам \nудачи :)\n\n" \
+            "Начнём с названия лота - напишите на русском название лота\n\n" \
+
+    msg = bot.send_message(message.chat.id, text)
+    bot.register_next_step_handler(msg, lot)
 
 class Lot:
     def __init__(self, lot):
@@ -170,8 +177,8 @@ def photo_lot(message):
             # car_init_dict[message.chat.id].photo.append(x.file_id)
         print(lot_init_dict[message.chat.id].photo)
 
-        with open('1.json', 'w', encoding='utf-8') as f:
-            json.dump(dict, f, ensure_ascii=False, indent=4)
+        with open('lots/2.json', 'w', encoding='utf-8') as f:
+            json.dump(lot_init_dict, f, ensure_ascii=False, indent=4)
 
         # media_group = []
         # for num, file_id in enumerate(car_init_dict[message.chat.id].photo):

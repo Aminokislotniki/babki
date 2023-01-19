@@ -19,16 +19,12 @@ def post_lot(dict_lot,message):
     buf=''
     for x in dict_lot:
         if x=='lot_name':
-            buf+='lot_name '+(dict_lot[x])+"\n"
-        if x=='lot':
-            buf+='lot '+(dict_lot[x])+"\n"
-        if x=='winner':
-            buf+='winner '+(dict_lot[x])+"\n"
-        for i in dict_lot[x]:
-            if i=='price':
-                buf+='price '+(dict_lot[x][i])
+            buf+=(dict_lot[x])+"\n"
+        if x=="descripchion":
+            buf+=(dict_lot[x])+"\n"
+        if x=="price":
+            buf+='Цена '+(dict_lot[x])
     print(buf)
-
     bot.send_message(message.chat.id, buf, reply_markup=stavka(list))
 
 
@@ -59,19 +55,19 @@ def information(call_id):
                                        "Выигранный лот необходимо выкупить в течении 5 дней, в противном случае БАН на 5 дней!!!", show_alert=True)
 
 def time_lot(call_id,dict_lot):
-    a=datetime.now()
-    b=datetime.now()+timedelta(days=5,hours=5)
-    c=b-a
-    print(int(time.time()))
-
+    time_today=(int(time.time()))
     for x in dict_lot:
-        for i in dict_lot[x]:
-            if i =='time':
-                time_break=dict_lot[x][i]
-
+        if x =='time_create':
+            time_break=dict_lot[x]
     print(time_break)
+    c=time_today-int(time_break)
+    if c>0:
+        c=(time.ctime(c))
+        print(c)
 
-    bot.answer_callback_query(call_id, c, show_alert=False)
+        bot.answer_callback_query(call_id,"Время окончания аукциона:" + c, show_alert=False)
+    else:
+        bot.answer_callback_query(call_id, "К сожалению, отменить ставку уже невозможно. Удачных торгов!!!", show_alert=False)
 
 def stavka_back(call_id):
     a = datetime.now()
