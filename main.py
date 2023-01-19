@@ -1,7 +1,7 @@
 import json
 from variables import bot
 from keyboards import type_of_lots_keyboard, active_lots_keyboard, nonpublic_lots_keyboard
-from services_func import fs_serj, dt_serj
+from services_func import fs_serj, dt_serj, check_ban
 
 
 @bot.message_handler(commands=['start'])
@@ -27,10 +27,12 @@ def statistics(message):
 
 @bot.message_handler(commands=['view_lots'])
 def view_lots(message):
-    # тут должна быть проверка на админа
-    # теперь отправляем пользователю 3 кнопки
-    # bot.delete_message(message.chat.id,message.message_id)
-    bot.send_message(message.chat.id, "Выберите тип лота, который вы хотите просмотреть", reply_markup=type_of_lots_keyboard)\
+    # тут должна быть проверка на админа и на бан
+    # проверка на бан
+    if check_ban(message.from_user.id):
+        # теперь отправляем пользователю 3 кнопки
+        # bot.delete_message(message.chat.id,message.message_id)
+        bot.send_message(message.chat.id, "Выберите тип лота, который вы хотите просмотреть", reply_markup=type_of_lots_keyboard)
 
 
 @bot.callback_query_handler(func=lambda call: True)
