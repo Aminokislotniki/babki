@@ -9,6 +9,10 @@ def fs_serj(st):
     return(st[0:2])
 
 def check_ban(user_id):
+    # Принимает  int - user_id
+    # Возвращает True - если у пользователя НЕТ бана
+    # Возвращает False - если пользователь в бане
+    # Если какая-то лабуда пишет в терминал сообщение
     f = open("users_statistics.json", 'r', encoding='utf-8')
     buf_statistics = json.loads(f.read())
     f.close()
