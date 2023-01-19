@@ -4,6 +4,27 @@ from keyboards import type_of_lots_keyboard, active_lots_keyboard, nonpublic_lot
 from services_func import fs_serj, dt_serj
 
 
+@bot.message_handler(commands=['start'])
+def statistics(message):
+    try:
+        f = open("users_statistics.json", 'r', encoding='utf-8')
+        buf_statistics = json.loads(f.read())
+        f.close()
+        if str(message.from_user.id) not in buf_statistics.keys():
+            print("new user " + str(message.from_user.id))
+            print(buf_statistics)
+            buf_statistics[str(message.from_user.id)] = dict({"ban":"False", "bets":[]})
+
+            with open('users_statistics.json', 'w', encoding='utf-8') as f:
+                json.dump(buf_statistics, f, ensure_ascii=False, indent=4)
+
+        else:
+            # кусок else - можно убрать - чисто для проверки, что работает
+            print("old user " + str(message.from_user.id))
+    except:
+        print("Что-то пошло не так в команде /start")
+
+
 @bot.message_handler(commands=['view_lots'])
 def view_lots(message):
     # тут должна быть проверка на админа
