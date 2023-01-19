@@ -28,9 +28,10 @@
             {"lot_id":"22","lot_name":"bmw"}
     ],
     "not_posted_lots":[
-        {"lot_id":"","lot_name":""},
-        {"lot_id":"","lot_name":""}
-            ],
+        {"lot_id":"1", "lot_name":"audi"},
+        {"lot_id":"2","lot_name":"bmw"},
+        {"lot_id":"3","lot_name":"alfa"}
+    ],
     "arhive":[
         {"lot_id":"","lot_name":""},
         {"lot_id":"","lot_name":""}
