@@ -28,3 +28,24 @@ def active_lots_keyboard(active_lots_list, page_number):
         keyboard.add(backbutton, nextbutton)
     return keyboard
 
+
+def nonpublic_lots_keyboard(nonpublic_lots_list, page_number):
+    keyboard = InlineKeyboardMarkup(row_width=3)
+    backbutton = InlineKeyboardButton(text="назад", callback_data="sn*" + str(page_number-1))
+    nextbutton = InlineKeyboardButton(text="вперед", callback_data="sn*" + str(page_number+1))
+    if len(nonpublic_lots_list) < 10:
+        button_list = [InlineKeyboardButton(text=x["lot_name"], callback_data="sn:" + x["lot_id"]) for x in nonpublic_lots_list]
+        keyboard.add(*button_list)
+    elif 9*(page_number+1) < len(nonpublic_lots_list) and 9*page_number <=0:
+        button_list = [InlineKeyboardButton(text=x["lot_name"], callback_data="sn:" + x["lot_id"]) for x in nonpublic_lots_list[page_number*9:(page_number+1)*9]]
+        keyboard.add(*button_list)
+        keyboard.add(nextbutton)
+    elif 9*(page_number+1) >= len(nonpublic_lots_list):
+        button_list = [InlineKeyboardButton(text=x["lot_name"], callback_data="sn:" + x["lot_id"]) for x in nonpublic_lots_list[page_number * 9:(page_number + 1) * 9]]
+        keyboard.add(*button_list)
+        keyboard.add(backbutton)
+    else :
+        button_list = [InlineKeyboardButton(text=x["lot_name"], callback_data="sn:" + x["lot_id"]) for x in nonpublic_lots_list[page_number * 9:(page_number + 1) * 9]]
+        keyboard.add(*button_list)
+        keyboard.add(backbutton, nextbutton)
+    return keyboard
