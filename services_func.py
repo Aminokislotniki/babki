@@ -5,8 +5,10 @@ def dt_serj(s):
     s = s[2:]
     return s
 
+
 def fs_serj(st):
     return(st[0:2])
+
 
 def check_ban(user_id):
     # Принимает  int - user_id
@@ -29,4 +31,15 @@ def check_ban(user_id):
         with open('users_statistics.json', 'w', encoding='utf-8') as f:
             json.dump(buf_statistics, f, ensure_ascii=False, indent=4)
         return True
+
+
+def check_is_admin(user_id, bot):
+    try:
+        name_file = "vocabulary/" + str(user_id) + ".json"
+        f = open(name_file, 'r', encoding='utf-8')
+        f.close()
+        return True
+    except:
+        bot.send_message(user_id, "Вы не являетесь Администратором")
+        return False
 
