@@ -1,19 +1,22 @@
-{
+{   "new_id": "2",
+
     "694443133": {
         "ban": "False",
         "bets": [
             {
-                "id_lot": "bet",
-                "time_bet": "time"
+                "id_lot": "id_lots",
+                "time_bet": "time",
+                "bet": "2300"
             },
             {
-                "21123123": "3555",
-                "time_bet": "23112312"
+                "id_lot": "111111",
+                "time_bet": "23112312",
+                "bet": "1200"
             }
         ]
     },
     "'2077212957": {
-        "ban": "True",
+        "ban": "False",
         "bets": []
     },
     "694443138": {
