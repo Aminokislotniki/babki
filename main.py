@@ -1,6 +1,6 @@
 import json
 from variables import bot
-from keyboards import type_of_lots_keyboard, active_lots_keyboard, nonpublic_lots_keyboard
+from keyboards import type_of_lots_keyboard, active_lots_keyboard, nonpublic_lots_keyboard, arhive_lots_keyboard
 from services_func import fs_serj, dt_serj, check_ban, check_is_admin
 
 
@@ -35,7 +35,6 @@ def view_lots(message):
 
 @bot.callback_query_handler(func=lambda call: True)
 def call(call):
-    print(call)
     print(call.data + " from " + call.from_user.username)
     flag = fs_serj(call.data)
     data = dt_serj(call.data)
@@ -67,7 +66,8 @@ def call(call):
                 if len(active_lots) > 0:
                     bot.edit_message_text(message_id=call.message.message_id, chat_id=call.message.chat.id, text= "Выберете нужный лот\nстраница - " + str(page+1), reply_markup=active_lots_keyboard(active_lots, page))
                 else:
-                    bot.send_message(call.message.chat.id, "Активных лотов не найдено")
+                    bot.delete_message(call.message.chat.id,call.message.message_id)
+                    bot.send_message(call.message.chat.id, "Активных лотов не найдено", reply_markup=active_lots_keyboard([],0))
             except Exception:
                 bot.send_message(call.message.chat.id, "Вы не создавали Лоты")
 
@@ -97,7 +97,8 @@ def call(call):
                                           text="Выберете нужный лот\nстраница - " + str(page + 1),
                                           reply_markup=nonpublic_lots_keyboard(not_posted_lots, page))
                 else:
-                    bot.send_message(call.message.chat.id, "Неопубликованных лотов не найдено")
+                    bot.delete_message(call.message.chat.id, call.message.message_id)
+                    bot.send_message(call.message.chat.id, "Неопубликованных лотов не найдено", reply_markup=nonpublic_lots_keyboard([],0))
             except Exception:
                 bot.send_message(call.message.chat.id, "Вы не создавали Лоты")
 
@@ -125,9 +126,10 @@ def call(call):
                 if len(arhive_lots) > 0:
                     bot.edit_message_text(message_id=call.message.message_id, chat_id=call.message.chat.id,
                                           text="Выберете нужный лот\nстраница - " + str(page + 1),
-                                          reply_markup=nonpublic_lots_keyboard(arhive_lots, page))
+                                          reply_markup=arhive_lots_keyboard(arhive_lots, page))
                 else:
-                    bot.send_message(call.message.chat.id, "Неопубликованных лотов не найдено")
+                    bot.delete_message(call.message.chat.id, call.message.message_id)
+                    bot.send_message(call.message.chat.id, "Архивных лотов не найдено", reply_markup=arhive_lots_keyboard([], 0))
             except Exception:
                 bot.send_message(call.message.chat.id, "Вы не создавали Лоты")
 
