@@ -1,7 +1,7 @@
 import json
 from variables import bot
 from keyboards import type_of_lots_keyboard, active_lots_keyboard, nonpublic_lots_keyboard, arhive_lots_keyboard
-from services_func import fs_serj, dt_serj, check_ban, check_is_admin
+from services_func import fs_serj, dt_serj, check_ban, check_is_admin, viev_card_lot
 
 
 @bot.message_handler(commands=['start'])
@@ -72,14 +72,12 @@ def call(call):
                 bot.send_message(call.message.chat.id, "Вы не создавали Лоты")
 
         if data[0] == ":":
-            try:
                 bot.send_message(call.message.chat.id, "ID лота = " + data[1:])
                 # тут должна быть попытка считать файл лота
-
+                card = viev_card_lot(data[1:])
+                bot.send_message(call.message.chat.id, text=card[0])
                 # Должен быть вызов функции Кати - на вывод лота ( Либо же мой - на вывод + редактировать и удалить)
                 # !!! Обсудить на уроке
-            except:
-                bot.send_message(call.message.chat.id,"Что-то пошло не так")
 
     # Флаг для выброса Неопубликованных Лотов (parametr "not_posted_lots")
     if flag == "sn":
