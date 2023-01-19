@@ -3,11 +3,35 @@ import telebot
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 from telebot.types import InputMediaPhoto
 import gspread
+import time
 from datetime import datetime, timedelta
 from fuzzywuzzy import process
-
+print(int(time.time()))
 bot = telebot.TeleBot('5683069905:AAGVpQBnaKoilz2UYWK1Ug3XoAENmDsTUyc');
 id_chanel = "@sandbox_chanell"
+import json
+
+f = open('lots/1.json', 'r', encoding='utf-8')
+dict_lot = json.loads(f.read())
+f.close()
+
+def post_lot(dict_lot,message):
+    buf=''
+    for x in dict_lot:
+        if x=='lot_name':
+            buf+='lot_name '+(dict_lot[x])+"\n"
+        if x=='lot':
+            buf+='lot '+(dict_lot[x])+"\n"
+        if x=='winner':
+            buf+='winner '+(dict_lot[x])+"\n"
+        for i in dict_lot[x]:
+            if i=='price':
+                buf+='price '+(dict_lot[x][i])
+    print(buf)
+
+    bot.send_message(message.chat.id, buf, reply_markup=stavka(list))
+
+
 
 def dt(s):
     s = s[2:]
@@ -34,10 +58,19 @@ def information(call_id):
     bot.answer_callback_query(call_id, "Ставку можно отменить в течении 1 минуты, нажав на кнопку Отмена."
                                        "Выигранный лот необходимо выкупить в течении 5 дней, в противном случае БАН на 5 дней!!!", show_alert=True)
 
-def time(call_id):
+def time_lot(call_id,dict_lot):
     a=datetime.now()
     b=datetime.now()+timedelta(days=5,hours=5)
     c=b-a
+    print(int(time.time()))
+
+    for x in dict_lot:
+        for i in dict_lot[x]:
+            if i =='time':
+                time_break=dict_lot[x][i]
+
+    print(time_break)
+
     bot.answer_callback_query(call_id, c, show_alert=False)
 
 def stavka_back(call_id):
@@ -45,12 +78,20 @@ def stavka_back(call_id):
     b = datetime.now() + timedelta(minutes=1)
 
 
+
     bot.answer_callback_query(call_id, "Ставка отменена успешно", show_alert=False)
     bot.answer_callback_query(call_id, "Ставка отменена успешно", show_alert=False)
+t=0
+def start_lot(dict):
+    t=datetime.now()
+    print(t)
+
 @bot.message_handler(commands=['start'])
 def welcome(message):
-    bot.send_message(message.chat.id,"Привет ,я бот аукционов Я помогу вам следить за выбранными лотами ,и регулировать ход аукциона.Удачных торгов 🤝 ")
-    bot.send_message(message.chat.id, "лот ",reply_markup=stavka(list))
+    msg=bot.send_message(message.chat.id,"Привет ,я бот аукционов Я помогу вам следить за выбранными лотами ,и регулировать ход аукциона.Удачных торгов 🤝 ")
+    #bot.register_next_step_handler(msg, post_lot)
+    post_lot(dict_lot,message)
+
 
 
 
@@ -65,7 +106,7 @@ def call(call):
         information(call.id)
 
     if flag == "lt":
-        time(call.id)
+        time_lot(call.id,dict_lot)
 
     if flag == "lb":
         stavka_back(call.id)
