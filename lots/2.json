@@ -9,6 +9,7 @@
                 "actual_price": "1700"
               },
   "service_info": {
+                    "start_price": "1000",
                     "id_admin": "",
                     "status":"activ",
                     "min_stavka": "10",
@@ -17,13 +18,13 @@
                     "winner":{
                               "user_name":"@tima_minski",
                               "price_final": "1700"
-                    },
-    "history_bets": [
+                    }
+                  },
+  "history_bets": [
       {"bet": "1100" ,"id_user":"2077212957", "user_name": "@KatsiarynaVol"},
       {"bet": "1300" ,"id_user":"958693574", "user_name": "@tima_minski"},
       {"bet": "1400" ,"id_user":"2077212957", "user_name": "@KatsiarynaVol"},
       {"bet": "1700" ,"id_user":"958693574", "user_name": "@tima_minski"}
 
     ]
-  }
 }

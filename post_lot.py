@@ -6,7 +6,7 @@ id_chanel = "@sandbox_chanell"
 from keyboards import stavka
 import json
 
-f = open('lots/3.json', 'r', encoding='utf-8')
+f = open('lots/2.json', 'r', encoding='utf-8')
 dict_lot = json.loads(f.read())
 f.close()
 

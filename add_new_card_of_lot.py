@@ -208,7 +208,7 @@ def stavka_canal():
 def post_lots(dict_lot):
     dict_lot.clear()
     print("post_lots")
-    f = open('lots/3.json', 'r', encoding='utf-8')
+    f = open('lots/2.json', 'r', encoding='utf-8')
     dict_lot = json.loads(f.read())
     f.close()
     buf=''
@@ -233,7 +233,6 @@ def call(call):
 
     if flag == "lo":
         print(call)
-
         bot.answer_callback_query(callback_query_id=call.id)
         bot.send_message(id_chanel, "lots()")
         with open('lots/3.json', 'w', encoding='utf-8') as f:
