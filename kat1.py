@@ -7,7 +7,7 @@ import time
 from datetime import datetime, timedelta
 from fuzzywuzzy import process
 print(int(time.time()))
-bot = telebot.TeleBot('5683069905:AAGVpQBnaKoilz2UYWK1Ug3XoAENmDsTUyc');
+bot = telebot.TeleBot();
 id_chanel = "@sandbox_chanell"
 import json
 
@@ -72,8 +72,6 @@ def time_lot(call_id,dict_lot):
 def stavka_back(call_id):
     a = datetime.now()
     b = datetime.now() + timedelta(minutes=1)
-
-
 
     bot.answer_callback_query(call_id, "Ставка отменена успешно", show_alert=False)
     bot.answer_callback_query(call_id, "Ставка отменена успешно", show_alert=False)

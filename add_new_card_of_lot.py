@@ -1,38 +1,43 @@
 # здесь будет функция, добавления админом, нового лота
 from telebot.types import ReplyKeyboardRemove, InputMediaPhoto
+
 import telebot
 import json
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
-bot = telebot.TeleBot('5683069905:AAGVpQBnaKoilz2UYWK1Ug3XoAENmDsTUyc')
+from services_func import dt_serj,fs_serj
+#from post_lot import post_lots
+bot = telebot.TeleBot('5683069905:AAHpxtupIwvp19ybNfh0Gn2FbPVMEbKzKbs')
 id_chanel = "@sandbox_chanell"
 lot_init_dict={}
+dict_lot={}
 
 
 #bot.send_message(id_chanel, "А как тут команды вызвать?")
-
+@bot.message_handler(commands=['start'])
+def star_new_lot(message):
+    print(message)
 @bot.message_handler(commands=['new_lot'])
-def star_new_car(message):
-    global lot_init_dict
-
+def star_new_lot(message):
+    #global lot_init_dict
     lot_init_dict[message.chat.id] = ""
     text = "Для добавления нового лота - нужно будет заполнить все сведения о нём\n" \
             "Для этого нужно пройтись по дальнейшим шагам \nудачи :)\n\n" \
-            "Начнём с названия лота - напишите на русском название лота\n\n" \
+            "Начнём - напишите  название лота\n\n" \
 
+    print(message.id)
+    dict_lot["id_admin"]=message.from_user.id
+    dict_lot["user_name"]=message.from_user.username
     msg = bot.send_message(message.chat.id, text)
     bot.register_next_step_handler(msg, lot)
 
 class Lot:
     def __init__(self, lot):
         self.lot = lot
-        self.id_lot = None
         self.description = None
         self.price = None
         self.min_stavka = None
         self.type_stavka = None
-        self.data = None
-        self.photo = []
-
+        self.photo = None
 
 def lot_obj_lot(obj_lot):
     all_atributes = obj_lot.__dict__
@@ -46,7 +51,6 @@ def lot_obj_lot(obj_lot):
             text = text + key + " : " + val + "\n"
     return text
 
-
 def lot(message):
     if message.text == "/new_lot":
         msg = bot.send_message(message.chat.id, "Начнём с начала. Пришли название лота")
@@ -56,9 +60,9 @@ def lot(message):
         bot.send_message(message.chat.id, "Вы вышли из добaвления лота")
 
     elif message.content_type == "text" and message.text.replace(" ", "") != "":
-        print(message.id)
         new_lot = Lot(message.text)
         lot_init_dict[message.chat.id] = new_lot
+        dict_lot["lot_name"]=message.text
         bot.send_message(message.chat.id, lot_obj_lot(lot_init_dict[message.chat.id]))
         bot.delete_message(message.chat.id, message.message_id)
         bot.delete_message(message.chat.id, message.message_id-1)
@@ -68,7 +72,6 @@ def lot(message):
         msg = bot.send_message(message.chat.id,
                            "что-то пошло не так, попробуй снова\nДля выхода пришли '/stop'\nДля обновления карточки пришли '/new_lot'")
         bot.register_next_step_handler(msg, lot)
-
 
 def description(message):
     if message.text == "/new_lot":
@@ -80,6 +83,7 @@ def description(message):
 
     elif message.content_type == "text" and message.text.replace(" ", "") != "":
         lot_init_dict[message.chat.id].description = message.text
+        dict_lot["description"]=message.text
         bot.send_message(message.chat.id, lot_obj_lot(lot_init_dict[message.chat.id]))
         bot.delete_message(message.chat.id, message.message_id)
         bot.delete_message(message.chat.id, message.message_id-1)
@@ -102,11 +106,11 @@ def price(message):
 
     elif message.content_type == "text" and message.text.replace(" ", "") != "" and message.text.isdigit():
         lot_init_dict[message.chat.id].price = message.text
+        dict_lot["price"]=message.text
         bot.send_message(message.chat.id, lot_obj_lot(lot_init_dict[message.chat.id]))
         bot.delete_message(message.chat.id, message.message_id)
         bot.delete_message(message.chat.id, message.message_id - 1)
         bot.delete_message(message.chat.id, message.message_id - 2)
-
         msg = bot.send_message(message.chat.id,
                                "Теперь отправьте минмальную ставку")
         bot.register_next_step_handler(msg, min_stavka)
@@ -114,7 +118,6 @@ def price(message):
         msg = bot.send_message(message.chat.id,
                            "что-то пошло не так, попробуй снова\nДля выхода пришли '/stop'\nДля обновления карточки пришли '/new_lot'")
         bot.register_next_step_handler(msg,price)
-
 
 def min_stavka(message):
     if message.text == "/new_lot":
@@ -126,12 +129,13 @@ def min_stavka(message):
 
     elif message.content_type == "text" and message.text.replace(" ", "") != ""and message.text.isdigit():
         lot_init_dict[message.chat.id].min_stavka = message.text
+        dict_lot["min_stavka"]=message.text
         bot.send_message(message.chat.id, lot_obj_lot(lot_init_dict[message.chat.id]))
         bot.delete_message(message.chat.id, message.message_id)
         bot.delete_message(message.chat.id, message.message_id - 1)
         bot.delete_message(message.chat.id, message.message_id - 2)
-        msg = bot.send_message(message.chat.id, "Теперь отправьте тип ставки:\n цифра '1'-% от стоимости (от 2 до 10, но не меньше "
-                                                "минимальной ставки\n-или введи шаг ставки(т.е. возрастающая в 10 раз")
+        msg = bot.send_message(message.chat.id, "Теперь отправьте тип ставки:\n цифра '1'-% от стоимости (от 2 до 10, но не меньше) "
+                                                "минимальной ставки\n-или введи шаг ставки")
         bot.register_next_step_handler(msg, type_stavka)
     else:
         msg = bot.send_message(message.chat.id,
@@ -148,6 +152,7 @@ def type_stavka(message):
 
     elif message.content_type == "text" and message.text.replace(" ", "") != ""and message.text.isdigit():
         lot_init_dict[message.chat.id].type_stavka = message.text
+        dict_lot["type_stavka"]=message.text
         bot.send_message(message.chat.id, lot_obj_lot(lot_init_dict[message.chat.id]))
         bot.delete_message(message.chat.id, message.message_id)
         bot.delete_message(message.chat.id, message.message_id - 1)
@@ -161,37 +166,85 @@ def type_stavka(message):
 
 def photo_lot(message):
     if message.text == "/new_lot":
-        msg = bot.send_message(message.chat.id, "Начнём с начала. Пришли Марку Авто")
+        msg = bot.send_message(message.chat.id, "Начнём с начала. Пришли название лота")
         bot.register_next_step_handler(msg, lot)
 
     elif message.text == "/stop":
-        bot.send_message(message.chat.id, "Вы вышли из добовления новой машины")
+        bot.send_message(message.chat.id, "Вы вышли из добaвления лота")
 
     elif message.content_type == "photo":
-        print(message)
-        media = []
-        for x in message.photo:
-            print(x.file_id)
-            media.append(x.file_id)
-            bot.send_photo(message.chat.id, photo=x.file_id)
-            # car_init_dict[message.chat.id].photo.append(x.file_id)
-        print(lot_init_dict[message.chat.id].photo)
+        bot.delete_message(message.chat.id, message.message_id)
+        bot.delete_message(message.chat.id, message.message_id - 1)
+        bot.delete_message(message.chat.id, message.message_id - 2)
+        keyboard_lot = InlineKeyboardMarkup()
+        button_1 = (InlineKeyboardButton("Опубликовать",url="https://t.me/sandbox_chanell", callback_data="lo"))
+        button_2 = (InlineKeyboardButton("Удалить", callback_data="ld"))
 
-        with open('lots/2.json', 'w', encoding='utf-8') as f:
-            json.dump(lot_init_dict, f, ensure_ascii=False, indent=4)
+        keyboard_lot.add(button_1, button_2)
+        photo1=( message.photo[-1].file_id)
+        bot.send_photo(message.chat.id, photo1,lot_obj_lot(lot_init_dict[message.chat.id]))
+        bot.send_message(message.chat.id,"Вот карточка лота.\nЧто делаем дальше?",reply_markup=keyboard_lot)
+        bot.send_message(id_chanel, "Вот карточка лота.\nЧто делаем дальше?", reply_markup=keyboard_lot)
 
-        # media_group = []
-        # for num, file_id in enumerate(car_init_dict[message.chat.id].photo):
-        #     media_group.append(InputMediaPhoto(media=file_id, caption=card_obj_car(car_init_dict[message.chat.id]) if num == 0 else ""))
-        # bot.send_media_group(message.chat.id, media_group)
+        dict_lot['photo']=[photo1]
 
-        # for num, url in enumerate(media):
-        #     media_group.append(InputMediaPhoto(media=url, caption="11111111" if num == 0 else ''))
-        # bot.send_media_group(message.chat.id, media_group)
     else:
         msg = bot.send_message(message.chat.id,
                                "что-то пошло не так, попробуй снова\nДля выхода пришли '/stop'\nДля обновления карточки пришли '/new_lot'")
         bot.register_next_step_handler(msg, photo_lot)
+
+
+def stavka_canal():
+    lot_keyboard = InlineKeyboardMarkup()
+
+    button_tree = (InlineKeyboardButton("Участвовать", callback_data="ly"))
+    button_four = (InlineKeyboardButton("время", callback_data="lt" ))
+    button_five = (InlineKeyboardButton("Информация", callback_data="li"))
+
+    lot_keyboard.add( button_tree,button_four,button_five)
+    return lot_keyboard
+
+def post_lots(dict_lot):
+    dict_lot.clear()
+    print("post_lots")
+    f = open('lots/3.json', 'r', encoding='utf-8')
+    dict_lot = json.loads(f.read())
+    f.close()
+    buf=''
+    for x in dict_lot:
+        if x=='lot_name':
+            buf+=(dict_lot[x])+"\n"
+        if x=="description":
+            buf+=(dict_lot[x])+"\n"
+        if x=="price":
+            buf+='Цена '+(dict_lot[x])
+    print(buf)
+    bot.send_message(id_chanel, buf, reply_markup=stavka_canal())
+
+
+@bot.callback_query_handler(func=lambda call: True)
+def call(call):
+    id = call.message.chat.id
+    flag =fs_serj(call.data)
+    data = dt_serj (call.data)
+    print(call.data)
+    # bot.answer_callback_query(callback_query_id=call.id)
+
+    if flag == "lo":
+        print(call)
+
+        bot.answer_callback_query(callback_query_id=call.id)
+        bot.send_message(id_chanel, "lots()")
+        with open('lots/3.json', 'w', encoding='utf-8') as f:
+            json.dump(dict_lot, f, ensure_ascii=False, indent=6)
+        bot.send_message(id_chanel, post_lots(dict_lot))
+
+    if flag == "ld":
+        print(call.data)
+        bot.answer_callback_query(callback_query_id=call.id)
+        bot.send_message(id, " попробуй снова, пришли '/new_lot'")
+
+
 
 
 print("Ready")
