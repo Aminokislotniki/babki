@@ -2,32 +2,59 @@
     "super_admin_id": [
         694443138
     ],
-    "lot_id": "8",
+    "lot_id": 12,
     "694443133": {
-        "ban": "False",
+        "ban": {
+            "is_ban": false,
+            "time": 0
+        },
         "bets": [
             {
-                "id_lot": "id_lots",
-                "time_bet": "time",
-                "bet": "2300"
+                "id_lot": 2,
+                "time_bet": 1674301393,
+                "bet": 2000
             },
             {
-                "id_lot": "111111",
-                "time_bet": "23112312",
-                "bet": "1200"
+                "id_lot": 3,
+                "time_bet": 16743013100,
+                "bet": 2200
             }
         ]
     },
-    "'2077212957": {
-        "ban": "False",
-        "bets": []
-    },
-    "694443138": {
-        "ban": "False",
-        "bets": []
+    "2077212957": {
+        "ban": {
+            "is_ban": false,
+            "time": 0
+        },
+        "bets": [
+            {
+                "id_lot": 2,
+                "time_bet": 1674301393,
+                "bet": 2000
+            },
+            {
+                "id_lot": 3,
+                "time_bet": 16743013100,
+                "bet": 2200
+            }
+        ]
     },
     "958693574": {
-        "ban": "False",
-        "bets": []
+        "ban": {
+            "is_ban": false,
+            "time": 0
+        },
+        "bets": [
+            {
+                "id_lot": 2,
+                "time_bet": 1674301393,
+                "bet": 2000
+            },
+            {
+                "id_lot": 3,
+                "time_bet": 16743013100,
+                "bet": 2200
+            }
+        ]
     }
 }
