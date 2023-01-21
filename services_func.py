@@ -62,7 +62,7 @@ def id_lot():
     buf = json.loads(f.read())
     f.close()
     id = buf["lot_id"]
-    buf["lot_id"] = str(int(id)+1)
+    buf["lot_id"] = id+1
     with open('users_statistics.json', 'w', encoding='utf-8') as f:
         json.dump(buf, f, ensure_ascii=False, indent=4)
     return buf["lot_id"]
