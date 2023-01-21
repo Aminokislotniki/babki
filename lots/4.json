@@ -1,29 +1,10 @@
 {
-  "lot_info": {
-                "photo": [],
-                "description": "description of bmw - good car",
-                "city": "Minsk",
-                "delivery terms": "каки-то условия доставки",
-                "user_name_admin": "@serj_you",
-                "start_price": "1000",
-                "actual_price": "1700"
-              },
-  "service_info": {
-                    "id_admin": "",
-                    "status":"activ",
-                    "min_stavka": "10",
-                    "type_stavka": "2",
-                    "time_create": "1673986421",
-                    "winner":{
-                              "user_name":"@tima_minski",
-                              "price_final": "1700"
-                    },
-    "history_bets": [
-      {"bet": "1100" ,"id_user":"2077212957", "user_name": "@KatsiarynaVol"},
-      {"bet": "1300" ,"id_user":"958693574", "user_name": "@tima_minski"},
-      {"bet": "1400" ,"id_user":"2077212957", "user_name": "@KatsiarynaVol"},
-      {"bet": "1700" ,"id_user":"958693574", "user_name": "@tima_minski"}
-
-    ]
-  }
+      "id_admin": 2077212957,
+      "user_name": "KatsiarynaVol",
+      "lot_name": "gg",
+      "description": "yy",
+      "price": "20",
+      "min_stavka": "2",
+      "type_stavka": "1",
+      "photo": "AgACAgIAAxkBAAIi1WPL1ZYtslnjT-PlIPZYnHRPgLmDAAL7wzEbO7VhSiO8Sn_g4RU5AQADAgADeQADLQQ"
 }
