@@ -75,7 +75,7 @@ def call(call):
                 bot.send_message(call.message.chat.id, "ID лота = " + data[1:])
                 # тут должна быть попытка считать файл лота
                 card = viev_card_lot(data[1:])
-
+                # again test
                 bot.send_message(call.message.chat.id, text=card[0])
                 # Должен быть вызов функции Кати - на вывод лота ( Либо же мой - на вывод + редактировать и удалить)
     # Флаг для выброса Неопубликованных Лотов (parametr "not_posted_lots")
