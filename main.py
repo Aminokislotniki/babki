@@ -78,8 +78,6 @@ def call(call):
 
                 bot.send_message(call.message.chat.id, text=card[0])
                 # Должен быть вызов функции Кати - на вывод лота ( Либо же мой - на вывод + редактировать и удалить)
-                # !!! Обсудить на уроке
-
     # Флаг для выброса Неопубликованных Лотов (parametr "not_posted_lots")
     if flag == "sn":
         if data[0] == "*":
