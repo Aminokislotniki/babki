@@ -1,5 +1,8 @@
-{   "new_id": "2",
-
+{
+    "super_admin_id": [
+        694443138
+    ],
+    "lot_id": "8",
     "694443133": {
         "ban": "False",
         "bets": [

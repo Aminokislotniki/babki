@@ -43,3 +43,26 @@ def check_is_admin(user_id, bot):
         bot.send_message(user_id, "Вы не являетесь Администратором")
         return False
 
+
+def check_is_super_admin(user_id, bot):
+    try:
+        f = open("users_statistics.json", 'r', encoding="utf-8")
+        buf = json.loads(f.read())
+        super_admins = buf["super_admin_id"]
+        if user_id in super_admins:
+            return True
+        else:
+            bot.send_message(user_id,"Вы не являетесь Супер Администратором")
+            return False
+    except:
+        print("что-то пошло не так в функции check_is_super_admin")
+
+def id_lot():
+    f = open("users_statistics.json", "r", encoding="utf-8")
+    buf = json.loads(f.read())
+    f.close()
+    id = buf["lot_id"]
+    buf["lot_id"] = str(int(id)+1)
+    with open('users_statistics.json', 'w', encoding='utf-8') as f:
+        json.dump(buf, f, ensure_ascii=False, indent=4)
+    return buf["lot_id"]

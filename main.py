@@ -1,8 +1,8 @@
 import json
 from variables import bot
 from keyboards import type_of_lots_keyboard, active_lots_keyboard, nonpublic_lots_keyboard
-from services_func import fs_serj, dt_serj, check_ban, check_is_admin
-
+from services_func import fs_serj, dt_serj, check_ban, check_is_admin, check_is_super_admin, id_lot
+# from admin_add import catch_reply
 
 @bot.message_handler(commands=['start'])
 def statistics(message):
@@ -23,6 +23,15 @@ def statistics(message):
             print("old user " + str(message.from_user.id))
     except:
         print("Что-то пошло не так в команде /start")
+
+@bot.message_handler(commands=['admin_add'])
+def start_admin(message):
+    if check_is_super_admin(message.from_user.id, bot):
+        bot.send_message(message.chat.id,
+                         "Перешлите сюда сообщение от человека, которого вы хотите добавить в Администраторы")
+        # msg = bot.send_message(message.chat.id, "Перешлите сюда сообщение от человека, которого вы хотите добавить в Администраторы")
+        # bot.register_next_step_handler(msg, catch_reply)
+
 
 
 @bot.message_handler(commands=['view_lots'])
