@@ -75,6 +75,7 @@ def call(call):
                 bot.send_message(call.message.chat.id, "ID лота = " + data[1:])
                 # тут должна быть попытка считать файл лота
                 card = viev_card_lot(data[1:])
+
                 bot.send_message(call.message.chat.id, text=card[0])
                 # Должен быть вызов функции Кати - на вывод лота ( Либо же мой - на вывод + редактировать и удалить)
                 # !!! Обсудить на уроке
