@@ -194,6 +194,7 @@ def photo_lot(message):
         bot.register_next_step_handler(msg, photo_lot)
 
 
+
 def stavka_canal():
     lot_keyboard = InlineKeyboardMarkup()
 
