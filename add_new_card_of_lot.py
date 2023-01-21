@@ -4,7 +4,7 @@ from telebot.types import ReplyKeyboardRemove, InputMediaPhoto
 import telebot
 import json
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
-from services_func import dt_serj,fs_serj
+from services_func import dt_serj,fs_serj,id_lot
 #from post_lot import post_lots
 bot = telebot.TeleBot('5683069905:AAHpxtupIwvp19ybNfh0Gn2FbPVMEbKzKbs')
 id_chanel = "@sandbox_chanell"
@@ -177,21 +177,19 @@ def photo_lot(message):
         bot.delete_message(message.chat.id, message.message_id - 1)
         bot.delete_message(message.chat.id, message.message_id - 2)
         keyboard_lot = InlineKeyboardMarkup()
-        button_1 = (InlineKeyboardButton("Сохранить", callback_data="lo"))
+        button_1 = (InlineKeyboardButton("Сохранить", callback_data="ls"))
         button_2 = (InlineKeyboardButton("Удалить", callback_data="ld"))
         keyboard_lot.add(button_1, button_2)
         photo1=( message.photo[-1].file_id)
         bot.send_photo(message.chat.id, photo1,lot_obj_lot(lot_init_dict[message.chat.id]))
         bot.send_message(message.chat.id,"Вот карточка лота.\nЧто делаем дальше?\nНажми сохранить\n Переходи в канал для опубликования: https://t.me/projectlimonbot\nдля создания нового лота пришли '/new_lot'",reply_markup=keyboard_lot)
-        #bot.send_message(id_chanel, "Вот карточка лота.\nЧто делаем дальше?", reply_markup=keyboard_lot)
+
         dict_lot['photo']=photo1
 
     else:
         msg = bot.send_message(message.chat.id,
                                "что-то пошло не так, попробуй снова\nДля выхода пришли '/stop'\nДля обновления карточки пришли '/new_lot'")
         bot.register_next_step_handler(msg, photo_lot)
-
-
 
 def stavka_canal():
     lot_keyboard = InlineKeyboardMarkup()
@@ -200,6 +198,9 @@ def stavka_canal():
     button_five = (InlineKeyboardButton("Информация", callback_data="li"))
     lot_keyboard.add( button_tree,button_four,button_five)
     return lot_keyboard
+
+
+buf=""
 
 def post_lots(dict_lot):
     dict_lot.clear()
@@ -216,10 +217,9 @@ def post_lots(dict_lot):
         if x=="price":
             buf+='Цена '+(dict_lot[x])
 
-    bot.send_photo(id_chanel,dict_lot["photo"],caption=buf,reply_markup=stavka_canal())
+    #bot.send_photo(id_chanel,dict_lot["photo"],caption=buf,reply_markup=stavka_canal())
     print(buf)
-
-
+    return buf
 
 
 @bot.callback_query_handler(func=lambda call: True)
@@ -230,13 +230,18 @@ def call(call):
 
     # bot.answer_callback_query(callback_query_id=call.id)
 
-    if flag == "lo":
+    if flag == "ls":
         #print(call)
         bot.answer_callback_query(callback_query_id=call.id)
         #bot.send_message(id_chanel, "lots()")
+        dict_lot["service_info"]["id_admin"]=
+        id_lot()
         with open('lots/4.json', 'w', encoding='utf-8') as f:
             json.dump(dict_lot, f, ensure_ascii=False, indent=6)
         post_lots(dict_lot)
+        bot.send_photo(id_chanel, dict_lot["photo"], caption=buf, reply_markup=stavka_canal())
+
+
 
 
 
@@ -245,7 +250,6 @@ def call(call):
         bot.answer_callback_query(callback_query_id=call.id)
         bot.send_message(id, " попробуй снова, пришли '/new_lot'")
         dict_lot.clear()
-
 
     if flag=="ly":
         print(call)
