@@ -1,16 +1,15 @@
 {
   "lot_info": {
-                "lot_name": null,
-                "photo": null,
-                "description": null,
-                "city": null,
-                "delivery terms": null,
-                "user_name_admin": null,
-                "start_price": null,
-                "actual_price": null
+                "lot_name": "serj",
+                "photo": "https://avatars.mds.yandex.net/get-vertis-journal/3934100/2021-01-19-2c5996d983f64716bbd554e321b49db8.jpg_1622737068729/orig",
+                "description": "Это лучшая работа в мире",
+                "city": "Минск",
+                "delivery terms": "Евпропочтой",
+                "user_name_admin": "serj_you",
+                "start_price": 2000,
+                "actual_price": 3000
               },
   "service_info": {
-                    "message_id_in_channel":null,
                     "start_price": null,
                     "id_admin": null,
                     "status":null,

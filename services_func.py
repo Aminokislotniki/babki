@@ -61,3 +61,23 @@ def id_lot():
     with open('users_statistics.json', 'w', encoding='utf-8') as f:
         json.dump(buf, f, ensure_ascii=False, indent=4)
     return buf["lot_id"]
+
+
+def view_card_of_lot(lot_id, bot, chat_id):
+    try:
+        f = open("lots/" + str(lot_id) + ".json", "r", encoding="utf-8")
+        lot = json.loads(f.read())
+        f.close()
+        text = f'Название: {lot["lot_info"]["lot_name"]}\n' \
+               f'Описание: {lot["lot_info"]["description"]}\n' \
+               f'Город: {lot["lot_info"]["city"]}\n' \
+               f'Условия доставки: {lot["lot_info"]["delivery terms"]}\n' \
+               f'Продавец: {lot["lot_info"]["delivery terms"]}\n' \
+               f'Стартовая цена: {lot["lot_info"]["start_price"]}\n' \
+               f'Актуальная цена: {lot["lot_info"]["actual_price"]}\n'
+        return text, lot
+
+
+    except:
+        bot.send_message(chat_id, "Какая-то хрень, но файл с ID - " + str(lot_id) + " не найден :(")
+        return 0, 0

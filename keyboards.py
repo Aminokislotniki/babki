@@ -97,3 +97,22 @@ def stavka(list):
 
     stavka_keyboard.add(*button_list, button_one,button_two,button_tree,button_four,button_five)
     return stavka_keyboard
+
+def card_view_keyboard(id_lot, type_to_back_menu):
+    keyboard = InlineKeyboardMarkup()
+    button_edit = (InlineKeyboardButton("редактировать", callback_data="se*" + str(id_lot)))
+    #returntomenu = InlineKeyboardButton(text="назад", callback_data=type_to_back_menu)
+    exitbutton = InlineKeyboardButton(text="выход", callback_data="sq")
+
+    keyboard.add(button_edit)
+    keyboard.add(exitbutton)
+    return keyboard
+
+def edit_card_keyboard(id_lot):
+    keyboard = InlineKeyboardMarkup(row_width=2)
+    names = ["Названия лота", "Фото", "Описание", "Город", "Условия доставки", "Стартовая цена"]
+    button_list = [InlineKeyboardButton(text=x, callback_data="se:" + str(id_lot) + "*" + x) for x in names]
+    exitbutton = InlineKeyboardButton(text="выход", callback_data="sq")
+    keyboard.add(*button_list)
+    keyboard.add(exitbutton)
+    return keyboard

@@ -3,7 +3,7 @@
             "user_name":"@Serj_you"
            },
     "lots":[
-            {"lot_id":"1", "lot_name":"audi"},
+            {"lot_id":"1", "lot_name":"serj"},
             {"lot_id":"2","lot_name":"bmw"},
             {"lot_id":"3","lot_name":"alfa"},
             {"lot_id":"4","lot_name":"dodge"},
