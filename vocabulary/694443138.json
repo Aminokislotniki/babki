@@ -1,8 +1,7 @@
 {
-    "user":{"id_user":"694443138",
-            "user_name":"@Serj_you",
-            "rights":"2",
-            "name":"Sergey"},
+    "user":{"id_user":694443138,
+            "user_name":"@Serj_you"
+           },
     "lots":[
             {"lot_id":"1", "lot_name":"audi"},
             {"lot_id":"2","lot_name":"bmw"},

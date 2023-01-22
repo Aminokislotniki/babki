@@ -2,7 +2,7 @@ import json
 from variables import bot
 from keyboards import type_of_lots_keyboard, active_lots_keyboard, nonpublic_lots_keyboard
 from services_func import fs_serj, dt_serj, check_is_ban, check_is_admin, check_is_super_admin, id_lot
-# from admin_add import catch_reply
+from admin_add import create_new_admin_json
 
 @bot.message_handler(commands=['start'])
 def statistics(message):
@@ -26,12 +26,22 @@ def statistics(message):
 
 @bot.message_handler(commands=['admin_add'])
 def start_admin(message):
-    if not check_is_ban(message.from_user.id):
-        print("+")
-    #     bot.send_message(message.chat.id,
-    #                      "Перешлите сюда сообщение от человека, которого вы хотите добавить в Администраторы")
-        # msg = bot.send_message(message.chat.id, "Перешлите сюда сообщение от человека, которого вы хотите добавить в Администраторы")
-        # bot.register_next_step_handler(msg, catch_reply)
+    if check_is_super_admin(message.from_user.id,bot):
+        msg = bot.send_message(message.chat.id, "Перешлите сюда сообщение от человека, которого вы хотите добавить в Администраторы")
+        bot.register_next_step_handler(msg, catch_reply)
+
+def catch_reply(message):
+
+    if message.content_type == "text" and message.text =="/stop":
+        bot.send_message(message.chat.id, "Вы вышли из добовления администратора")
+    elif not message.forward_from:
+        msg = bot.send_message(message.chat.id, "Что-то пошло не так. Нужно Переслать сообщение от пользователя, которого вы хотите сделать админом\nПопробуйте снова\n напишите /stop - для выхода")
+        bot.register_next_step_handler(msg,catch_reply)
+    else:
+        id = message.forward_from.id
+        user_name = message.forward_from.username
+        create_new_admin_json(id,user_name,bot,message.chat.id)
+
 
 
 
@@ -45,7 +55,6 @@ def view_lots(message):
 
 @bot.callback_query_handler(func=lambda call: True)
 def call(call):
-    print(call)
     print(call.data + " from " + call.from_user.username)
     flag = fs_serj(call.data)
     data = dt_serj(call.data)
