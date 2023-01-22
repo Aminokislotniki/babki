@@ -5,7 +5,7 @@ from telebot.types import InputMediaPhoto
 import gspread
 import time
 from datetime import datetime, timedelta
-from services_func import check_ban
+from services_func import check_is_ban
 from fuzzywuzzy import process
 print(int(time.time()))
 bot = telebot.TeleBot();
@@ -86,7 +86,7 @@ def welcome(message):
     msg=bot.send_message(message.chat.id,"Привет ,я бот аукционов Я помогу вам следить за выбранными лотами ,и регулировать ход аукциона.Удачных торгов 🤝 ")
     #bot.register_next_step_handler(msg, post_lot)
     post_lot(dict_lot,message)
-    check_ban(user_id)
+    check_is_ban(user_id)
 
 
 

@@ -10,27 +10,22 @@ def fs_serj(st):
     return(st[0:2])
 
 
-def check_ban(user_id):
-    # Принимает  int - user_id
-    # Возвращает True - если у пользователя НЕТ бана
-    # Возвращает False - если пользователь в бане
-    # Если какая-то лабуда пишет в терминал сообщение
+def check_is_ban(user_id):
+    # Возвращает FALSE - если бана нет.
+    # Возвращает TRUE - если есть бан.
+    # Если вдруг не нашло такого пользователя - записывает в JSON рыбу и возвращает FALSE
     f = open("users_statistics.json", 'r', encoding='utf-8')
     buf_statistics = json.loads(f.read())
     f.close()
-    if user_id  in buf_statistics.keys():
-        if buf_statistics[str(user_id)]["ban"] == "False":
-            return True
-        elif buf_statistics[str(user_id)]["ban"] == "True":
-            return False
-        else:
-            print("Что-то пошло не так в функции  - check_ban")
+    print(buf_statistics.keys())
+    if str(user_id) in buf_statistics.keys():
+        return buf_statistics[str(user_id)]["ban"]["is_ban"]
     else:
-        buf_statistics[str(user_id)] = dict({"ban": "False", "bets": []})
-
+        buf_statistics[str(user_id)] = dict({"ban": {"is_ban": False, "time": 0}, "bets": []})
         with open('users_statistics.json', 'w', encoding='utf-8') as f:
             json.dump(buf_statistics, f, ensure_ascii=False, indent=4)
-        return True
+        print("Создан новый пользователь  ID=" + str(user_id))
+        return False
 
 
 def check_is_admin(user_id, bot):
