@@ -1,13 +1,14 @@
 # здесь будет функция, добавления админом, нового лота
 from telebot.types import ReplyKeyboardRemove, InputMediaPhoto
-
+import time
 import telebot
 import json
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 from services_func import dt_serj,fs_serj,id_lot
-#from post_lot import post_lots
-bot = telebot.TeleBot('5683069905:AAHpxtupIwvp19ybNfh0Gn2FbPVMEbKzKbs')
-id_chanel = "@sandbox_chanell"
+from post_lot import post_lots
+from variables import bot
+#bot = telebot.TeleBot('5683069905:AAHpxtupIwvp19ybNfh0Gn2FbPVMEbKzKbs')
+id_chanel = "@projectlimonbot"
 lot_init_dict={}
 dict_lot={}
 
@@ -24,9 +25,6 @@ def star_new_lot(message):
             "Для этого нужно пройтись по дальнейшим шагам \nудачи :)\n\n" \
             "Начнём - напишите  название лота\n\n" \
 
-    print(message.id)
-    dict_lot["id_admin"]=message.from_user.id
-    dict_lot["user_name"]=message.from_user.username
     msg = bot.send_message(message.chat.id, text)
     bot.register_next_step_handler(msg, lot)
 
@@ -62,10 +60,12 @@ def lot(message):
     elif message.content_type == "text" and message.text.replace(" ", "") != "":
         new_lot = Lot(message.text)
         lot_init_dict[message.chat.id] = new_lot
-        dict_lot["lot_name"]=message.text
+        dict_lot["lot_info"]={}
+        dict_lot["lot_info"].update({"lot_name":message.text})
         bot.send_message(message.chat.id, lot_obj_lot(lot_init_dict[message.chat.id]))
         bot.delete_message(message.chat.id, message.message_id)
         bot.delete_message(message.chat.id, message.message_id-1)
+        bot.delete_message(message.chat.id, message.message_id - 2)
         msg = bot.send_message(message.chat.id, "Теперь отправьте описание лота")
         bot.register_next_step_handler(msg, description)
     else:
@@ -83,7 +83,8 @@ def description(message):
 
     elif message.content_type == "text" and message.text.replace(" ", "") != "":
         lot_init_dict[message.chat.id].description = message.text
-        dict_lot["description"]=message.text
+        dict_lot["lot_info"].update({"description":message.text})
+        print(dict_lot)
         bot.send_message(message.chat.id, lot_obj_lot(lot_init_dict[message.chat.id]))
         bot.delete_message(message.chat.id, message.message_id)
         bot.delete_message(message.chat.id, message.message_id-1)
@@ -106,7 +107,9 @@ def price(message):
 
     elif message.content_type == "text" and message.text.replace(" ", "") != "" and message.text.isdigit():
         lot_init_dict[message.chat.id].price = message.text
-        dict_lot["price"]=message.text
+        dict_lot["service_info"]={}
+        dict_lot ["lot_info"].update({"start_price":int(message.text)})
+        dict_lot["service_info"].update({"start_price": int(message.text)})
         bot.send_message(message.chat.id, lot_obj_lot(lot_init_dict[message.chat.id]))
         bot.delete_message(message.chat.id, message.message_id)
         bot.delete_message(message.chat.id, message.message_id - 1)
@@ -129,7 +132,7 @@ def min_stavka(message):
 
     elif message.content_type == "text" and message.text.replace(" ", "") != ""and message.text.isdigit():
         lot_init_dict[message.chat.id].min_stavka = message.text
-        dict_lot["min_stavka"]=message.text
+        dict_lot["service_info"].update({"min_stavka":int(message.text)})
         bot.send_message(message.chat.id, lot_obj_lot(lot_init_dict[message.chat.id]))
         bot.delete_message(message.chat.id, message.message_id)
         bot.delete_message(message.chat.id, message.message_id - 1)
@@ -152,7 +155,7 @@ def type_stavka(message):
 
     elif message.content_type == "text" and message.text.replace(" ", "") != ""and message.text.isdigit():
         lot_init_dict[message.chat.id].type_stavka = message.text
-        dict_lot["type_stavka"]=message.text
+        dict_lot["service_info"].update({"type_stavka":int(message.text)})
         bot.send_message(message.chat.id, lot_obj_lot(lot_init_dict[message.chat.id]))
         bot.delete_message(message.chat.id, message.message_id)
         bot.delete_message(message.chat.id, message.message_id - 1)
@@ -176,15 +179,18 @@ def photo_lot(message):
         bot.delete_message(message.chat.id, message.message_id)
         bot.delete_message(message.chat.id, message.message_id - 1)
         bot.delete_message(message.chat.id, message.message_id - 2)
+        #bot.delete_message(message.chat.id, message.message_id - 3)
         keyboard_lot = InlineKeyboardMarkup()
         button_1 = (InlineKeyboardButton("Сохранить", callback_data="ls"))
         button_2 = (InlineKeyboardButton("Удалить", callback_data="ld"))
         keyboard_lot.add(button_1, button_2)
         photo1=( message.photo[-1].file_id)
+        dict_lot["service_info"] .update( {"id_admin": message.from_user.id})
         bot.send_photo(message.chat.id, photo1,lot_obj_lot(lot_init_dict[message.chat.id]))
         bot.send_message(message.chat.id,"Вот карточка лота.\nЧто делаем дальше?\nНажми сохранить\n Переходи в канал для опубликования: https://t.me/projectlimonbot\nдля создания нового лота пришли '/new_lot'",reply_markup=keyboard_lot)
+        dict_lot["lot_info"].update( {"user_name_admin": message.from_user.username})
+        dict_lot["lot_info"].update({'photo':photo1})
 
-        dict_lot['photo']=photo1
 
     else:
         msg = bot.send_message(message.chat.id,
@@ -202,24 +208,25 @@ def stavka_canal():
 
 buf=""
 
-def post_lots(dict_lot):
-    dict_lot.clear()
-    print("post_lots")
-    f = open('lots/4.json', 'r', encoding='utf-8')
-    dict_lot = json.loads(f.read())
-    f.close()
-    buf=''
-    for x in dict_lot:
-        if x=='lot_name':
-            buf+=(dict_lot[x])+"\n"
-        if x=="description":
-            buf+=(dict_lot[x])+"\n"
-        if x=="price":
-            buf+='Цена '+(dict_lot[x])
-
-    #bot.send_photo(id_chanel,dict_lot["photo"],caption=buf,reply_markup=stavka_canal())
-    print(buf)
-    return buf
+# def post_lots(id_lot):
+#
+#     print("post_lots")
+#     f = open('lots/'+str(id_lot)+'.json', 'r', encoding='utf-8')
+#     dict_lot = json.loads(f.read())
+#     f.close()
+#     buf=''
+#     for x in dict_lot:
+#         print(x)
+#         if x=='lot_name':
+#             buf+=(dict_lot[x])+"\n"
+#         if x=="description":
+#             buf+=(dict_lot[x])+"\n"
+#         if x=="price":
+#             buf+='Цена '+(dict_lot[x])
+#
+#     #bot.send_photo(id_chanel,dict_lot["lot_info"]["photo"],caption=buf,reply_markup=stavka_canal())
+#     print(buf)
+#     return buf
 
 
 @bot.callback_query_handler(func=lambda call: True)
@@ -231,18 +238,16 @@ def call(call):
     # bot.answer_callback_query(callback_query_id=call.id)
 
     if flag == "ls":
-        #print(call)
+
         bot.answer_callback_query(callback_query_id=call.id)
-        #bot.send_message(id_chanel, "lots()")
-        dict_lot["service_info"]["id_admin"]=
-        id_lot()
-        with open('lots/4.json', 'w', encoding='utf-8') as f:
-            json.dump(dict_lot, f, ensure_ascii=False, indent=6)
-        post_lots(dict_lot)
-        bot.send_photo(id_chanel, dict_lot["photo"], caption=buf, reply_markup=stavka_canal())
+        dict_lot["service_info"] .update({"status": "activ"})
+        dict_lot["service_info"] .update( {"time_create": (int(time.time()))})
+        id_l=id_lot()
+        with open('lots/'+str(id_l)+'.json', 'w', encoding='utf-8') as f:
+            json.dump(dict_lot, f, ensure_ascii=False, indent=15)
+        post_lots(id_l)
 
-
-
+        bot.send_photo(id_chanel, dict_lot ["lot_info"]["photo"], caption=buf, reply_markup=stavka_canal())
 
 
     if flag == "ld":

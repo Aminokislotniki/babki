@@ -6,30 +6,23 @@ id_chanel = "@sandbox_chanell"
 from keyboards import stavka
 import json
 
-f = open('lots/2.json', 'r', encoding='utf-8')
-dict_lot = json.loads(f.read())
-f.close()
+def post_lots(id_lot):
 
-bot.send_message(id_chanel," ")
-print(data)
-print(dict_lot)
-def post_lots(dict_lot):
-    photo1=""
+    f = open('lots/'+str(id_lot)+'.json', 'r', encoding='utf-8')
+    dict_lot = json.loads(f.read())
+    f.close()
     buf=''
     for x in dict_lot:
+        print(x)
         if x=='lot_name':
             buf+=(dict_lot[x])+"\n"
         if x=="description":
             buf+=(dict_lot[x])+"\n"
         if x=="price":
             buf+='Цена '+(dict_lot[x])
-        if x == 'photo':
-            photo1=x
+
     print(buf)
-    bot.send_photo(id_chanel,buf, photo1)
-
-
-post_lots(dict_lot)
+    return buf
 
 
 
