@@ -8,7 +8,7 @@ def create_new_admin_json(id_new_admin, user_name_new_admin, bot, chat_id):
         bot.send_message(chat_id,"Данный пользователь уже является админом")
     except:
         admin = dict({
-            "user": {"id_user": id_new_admin, "user_name": user_name_new_admin},
+            "user": {"id_user": id_new_admin, "user_name": "@" + user_name_new_admin},
             "lots": [],
             "not_posted_lots": [],
             "arhive": []

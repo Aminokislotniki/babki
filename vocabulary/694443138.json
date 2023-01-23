@@ -80,7 +80,7 @@
     "not_posted_lots": [
         {
             "lot_id": "2",
-            "lot_name": "new_name_np"
+            "lot_name": "Non posted"
         }
     ],
     "arhive": [

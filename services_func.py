@@ -1,7 +1,6 @@
 import json
-
 from babki.keyboards import edit_card_keyboard
-
+from keyboards import quit_only_keyboard
 
 def dt_serj(s):
     s = s[2:]
@@ -128,4 +127,18 @@ def save_new_caption_lot(caption, id_lot, admin_id, type_lot, bot, chat_id):
             break
     with open('vocabulary/'+ str(admin_id) + ".json", 'w', encoding='utf-8') as f:
         json.dump(admin, f, ensure_ascii=False, indent=4)
-    bot.send_message(chat_id, "Лот " + lot_name_new + " успешно сохранен")
+    bot.send_message(chat_id, "Лот " + lot_name_new + " успешно сохранен", reply_markup=quit_only_keyboard)
+
+def post_to_channel_by_id(message,lot_id, bot):
+    if message.text == "/stop":
+        bot.delete_message(message.chat.id, message.message_id)
+        bot.delete_message(message.chat.id, message.message_id -1)
+        bot.send_message(message.chat.id, "Вы вышли из отправки в канал, но вы можете продолжить редактировать лот", reply_markup=quit_only_keyboard)
+    elif message.text == "/continue":
+        bot.delete_message(message.chat.id, message.message_id)
+        bot.delete_message(message.chat.id, message.message_id - 1)
+        bot.delete_message(message.chat.id, message.message_id - 2)
+        bot.send_message(message.chat.id, "Тут должна быть функция отправки в бот")
+    else:
+       msg = bot.send_message("Вы можете либо выйти через /stop\nЛибо подтвердить отправку через /continue")
+       bot.register_next_step_handler(msg, post_to_channel_by_id, lot_id, bot)

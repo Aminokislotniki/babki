@@ -3,7 +3,7 @@ from variables import bot
 from keyboards import type_of_lots_keyboard, active_lots_keyboard, nonpublic_lots_keyboard, card_view_keyboard, \
     edit_card_keyboard, arhive_lots_keyboard
 from services_func import fs_serj, dt_serj, check_is_ban, check_is_admin, check_is_super_admin, id_lot, \
-    view_card_of_lot, edit_caption, save_new_caption_lot
+    view_card_of_lot, edit_caption, save_new_caption_lot, post_to_channel_by_id
 from admin_add import create_new_admin_json
 
 @bot.message_handler(commands=['start'])
@@ -172,7 +172,7 @@ def call(call):
             lot_id = data[3:].split("?")
             lot_id = lot_id[0]
             print(type_lot, edit_part, lot_id)
-            msg = bot.send_message(call.message.chat.id,"Для измениния поля - " + edit_part + ", отправьте сообщение в чат \n для выхода напишите /stop")
+            msg = bot.send_message(call.message.chat.id,"Для измениния поля - " + edit_part + ", отправьте сообщение в чат \nДля выхода напишите /stop")
             bot.register_next_step_handler(msg, edit_caption, bot, call, edit_part, lot_id, type_lot)
 
     if flag =="sw":
@@ -184,6 +184,15 @@ def call(call):
             type_lot = types[type_lot]
             caption = call.message.caption
             save_new_caption_lot(caption, lot_id, call.message.chat.id, type_lot, bot, call.message.chat.id)
+
+    if flag =="sp":
+        if data[0] =="*":
+            lot_id = data.split("*")
+            lot_id = data[1]
+            alert_before_post = bot.send_message(call.message.chat.id,
+                                   "Вы уверены что хотите опубликовать лот?\nЕсли вы не редактировали лот или не сохранили изменений кнопкой 'Сохранить' лот опубликуется без изменений\nДля выхода напишите /stop\nДля продолжение напишете /continue")
+            bot.register_next_step_handler(alert_before_post, post_to_channel_by_id, lot_id, bot)
+
 
 print("Ready")
 bot.infinity_polling()

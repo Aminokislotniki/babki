@@ -8,6 +8,8 @@ exitbutton = InlineKeyboardButton(text="выход", callback_data="sq")
 type_of_lots_keyboard.add(active_lots, nonpublic_lots, archive_lots)
 type_of_lots_keyboard.add(exitbutton)
 
+quit_only_keyboard = InlineKeyboardMarkup()
+quit_only_keyboard.add(InlineKeyboardButton("Выход", callback_data="sq"))
 
 def active_lots_keyboard(active_lots_list, page_number):
     keyboard = InlineKeyboardMarkup(row_width=2)
@@ -100,11 +102,12 @@ def stavka(list):
 
 def card_view_keyboard(id_lot, type):
     keyboard = InlineKeyboardMarkup()
-    button_edit = (InlineKeyboardButton("редактировать", callback_data="se*" + type + ":" + str(id_lot)))
-    #returntomenu = InlineKeyboardButton(text="назад", callback_data=type_to_back_menu)
-    exitbutton = InlineKeyboardButton(text="выход", callback_data="sq")
-
+    button_edit = (InlineKeyboardButton("Редактировать", callback_data="se*" + type + ":" + str(id_lot)))
+    button_public_in_channel = (InlineKeyboardButton("Опубликовать", callback_data="sp*" + str(id_lot)))
+    exitbutton = InlineKeyboardButton(text="Выход", callback_data="sq")
     keyboard.add(button_edit)
+    if type =="n":
+        keyboard.add(button_public_in_channel)
     keyboard.add(exitbutton)
     return keyboard
 
@@ -114,8 +117,11 @@ def edit_card_keyboard(id_lot, type_lot):
     names = ["Название","Описание", "Город", "Условия доставки", "Стартовая цена"]
     button_list = [InlineKeyboardButton(text=x, callback_data="se:" + type_lot + "*" + str(id_lot) + "?" + x) for x in names]
     save_button = InlineKeyboardButton(text="Сохранить", callback_data="sw*" + type_lot + ":" + str(id_lot))
+    button_public_in_channel = (InlineKeyboardButton("Опубликовать", callback_data="sp*" + str(id_lot)))
     exitbutton = InlineKeyboardButton(text="Выход", callback_data="sq")
     keyboard.add(*button_list)
     keyboard.add(save_button)
+    if type_lot == "n":
+        keyboard.add(button_public_in_channel)
     keyboard.add(exitbutton)
     return keyboard
