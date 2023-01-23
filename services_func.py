@@ -1,5 +1,7 @@
 import json
 
+from babki.keyboards import edit_card_keyboard
+
 
 def dt_serj(s):
     s = s[2:]
@@ -81,3 +83,48 @@ def view_card_of_lot(lot_id, bot, chat_id):
     except:
         bot.send_message(chat_id, "Какая-то хрень, но файл с ID - " + str(lot_id) + " не найден :(")
         return 0, 0
+
+def edit_caption(message,bot, call, edit_part, id_lot):
+    if message.text == "/stop":
+        bot.send_message(message.chat.id, "Вы вышли из редактирования")
+    elif message.content_type == "text":
+        old_caption = call.message.caption
+        old_caption = old_caption.split("\n")
+        for i in range(len(old_caption)):
+            if edit_part in old_caption[i]:
+                old_caption[i] = edit_part+ ": " + message.text
+                break
+        new_caption = "\n".join(old_caption)
+        bot.edit_message_caption(caption=new_caption, chat_id=call.message.chat.id, message_id=call.message.message_id, reply_markup=edit_card_keyboard(id_lot))
+        bot.delete_message(message.chat.id, message.message_id-1)
+        bot.delete_message(message.chat.id, message.message_id)
+
+
+def save_new_caption_lot(caption, id_lot, admin_id):
+    names = ["Название", "Описание", "Город", "Условия доставки", "Стартовая цена"]
+    keys = ["lot_name", "description", "city", "delivery terms", "start_price"]
+    caption = caption.split("\n")
+    new_data = dict()
+    for i in range(len(names)):
+        for x in caption:
+            if names[i] in x:
+                new_data[keys[i]] = x.replace((names[i]+": "), "")
+    f = open("lots/" + str(id_lot) + ".json", "r", encoding="utf-8")
+    lot = json.loads(f.read())
+    f.close()
+    lot["lot_info"].update(new_data)
+    with open('lots/'+ id_lot + ".json", 'w', encoding='utf-8') as f:
+        json.dump(lot, f, ensure_ascii=False, indent=4)
+
+    lot_name_new = lot["lot_info"]["lot_name"]
+
+    f = open("vocabulary/" + str(admin_id) + ".json", "r", encoding="utf-8")
+    admin = json.loads(f.read())
+    f.close()
+    lots_list = admin["lots"]
+    for i in range(len(lots_list)):
+        if lots_list[i]["lot_id"] == str(id_lot):
+            admin["lots"][i]["lot_name"] = lot_name_new
+            break
+    with open('vocabulary/'+ str(admin_id) + ".json", 'w', encoding='utf-8') as f:
+        json.dump(admin, f, ensure_ascii=False, indent=4)

@@ -110,9 +110,11 @@ def card_view_keyboard(id_lot, type_to_back_menu):
 
 def edit_card_keyboard(id_lot):
     keyboard = InlineKeyboardMarkup(row_width=2)
-    names = ["Названия лота", "Фото", "Описание", "Город", "Условия доставки", "Стартовая цена"]
+    names = ["Название","Описание", "Город", "Условия доставки", "Стартовая цена"]
     button_list = [InlineKeyboardButton(text=x, callback_data="se:" + str(id_lot) + "*" + x) for x in names]
-    exitbutton = InlineKeyboardButton(text="выход", callback_data="sq")
+    save_button = InlineKeyboardButton(text="Сохранить", callback_data="sw*" + str(id_lot))
+    exitbutton = InlineKeyboardButton(text="Выход", callback_data="sq")
     keyboard.add(*button_list)
+    keyboard.add(save_button)
     keyboard.add(exitbutton)
     return keyboard

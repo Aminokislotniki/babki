@@ -2,7 +2,8 @@ import json
 from variables import bot
 from keyboards import type_of_lots_keyboard, active_lots_keyboard, nonpublic_lots_keyboard, card_view_keyboard, \
     edit_card_keyboard
-from services_func import fs_serj, dt_serj, check_is_ban, check_is_admin, check_is_super_admin, id_lot, view_card_of_lot
+from services_func import fs_serj, dt_serj, check_is_ban, check_is_admin, check_is_super_admin, id_lot, \
+    view_card_of_lot, edit_caption, save_new_caption_lot
 from admin_add import create_new_admin_json
 
 @bot.message_handler(commands=['start'])
@@ -78,18 +79,18 @@ def call(call):
         if data[0] =="*":
             page = data.split("*")
             page = int(page[1])
-            #try:
-            name_file = "vocabulary/" + str(call.from_user.id) + ".json"
-            f = open(name_file, 'r', encoding='utf-8')
-            buf_admin_file = json.loads(f.read())
-            f.close()
-            active_lots = buf_admin_file['lots']
-            if len(active_lots) > 0:
-                bot.edit_message_text(message_id=call.message.message_id, chat_id=call.message.chat.id, text= "Выберете нужный лот\nстраница - " + str(page+1), reply_markup=active_lots_keyboard(active_lots, page))
-            else:
-                bot.send_message(call.message.chat.id, "Активных лотов не найдено")
-            #except Exception:
-                #bot.send_message(call.message.chat.id, "Вы не создавали Лоты")
+            try:
+                name_file = "vocabulary/" + str(call.from_user.id) + ".json"
+                f = open(name_file, 'r', encoding='utf-8')
+                buf_admin_file = json.loads(f.read())
+                f.close()
+                active_lots = buf_admin_file['lots']
+                if len(active_lots) > 0:
+                    bot.edit_message_text(message_id=call.message.message_id, chat_id=call.message.chat.id, text= "Выберете нужный лот\nстраница - " + str(page+1), reply_markup=active_lots_keyboard(active_lots, page))
+                else:
+                    bot.send_message(call.message.chat.id, "Активных лотов не найдено")
+            except Exception:
+                bot.send_message(call.message.chat.id, "Вы не создавали Лоты")
 
         if data[0] == ":":
             try:
@@ -161,18 +162,22 @@ def call(call):
 
     if flag =="se":
         if data[0] =="*":
-            bot.edit_message_reply_markup(call.message.chat.id,call.message.message_id,reply_markup=edit_card_keyboard(data[1:]))
+            bot.edit_message_reply_markup(call.message.chat.id,call.message.message_id, reply_markup=edit_card_keyboard(data[1:]))
+
         if data[0] == ":":
-            print(call)
             edit_part = data.split("*")
             edit_part = edit_part[1]
             text_list = call.message.caption.split("\n")
-            for x in text_list:
-                if edit_part in x:
-                    print("cath it "+ x)
+            lot_id = data[1:].split("*")
+            lot_id = lot_id[0]
+            msg = bot.send_message(call.message.chat.id,"Для измениния поля - " + edit_part + ", отправьте сообщение в чат \n для выхода напишите /stop")
+            bot.register_next_step_handler(msg, edit_caption, bot, call, edit_part, lot_id)
 
-
-
+    if flag =="sw":
+        if data[0] =="*":
+            caption = call.message.caption
+            lot_id = data[1:]
+            save_new_caption_lot(caption, lot_id, call.message.chat.id)
 
 print("Ready")
 bot.infinity_polling()

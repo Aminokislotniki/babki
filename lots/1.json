@@ -1,25 +1,24 @@
 {
-  "lot_info": {
-                "lot_name": "serj",
-                "photo": "https://avatars.mds.yandex.net/get-vertis-journal/3934100/2021-01-19-2c5996d983f64716bbd554e321b49db8.jpg_1622737068729/orig",
-                "description": "Это лучшая работа в мире",
-                "city": "Минск",
-                "delivery terms": "Евпропочтой",
-                "user_name_admin": "serj_you",
-                "start_price": 2000,
-                "actual_price": 3000
-              },
-  "service_info": {
-                    "start_price": null,
-                    "id_admin": null,
-                    "status":null,
-                    "min_stavka": null,
-                    "type_stavka": null,
-                    "time_create": null,
-                    "winner_dict":{
-                              "user_name":null,
-                              "price_final": null
-                    }
-                  },
-  "history_bets": []
+    "lot_info": {
+        "lot_name": "serj",
+        "photo": "https://motor.ru/thumb/1280x720/filters:quality(75)/imgs/2020/09/07/14/4099186/52d8f45d1ae944564ab28538f5a79af4894c5106.jpg",
+        "description": "Самая лучшая работа в мире",
+        "city": "Минск",
+        "delivery terms": "Евпропочтой",
+        "start_price": "2000",
+        "actual_price": "3000"
+    },
+    "service_info": {
+        "start_price": null,
+        "id_admin": null,
+        "status": null,
+        "min_stavka": null,
+        "type_stavka": null,
+        "time_create": null,
+        "winner_dict": {
+            "user_name": null,
+            "price_final": null
+        }
+    },
+    "history_bets": []
 }
