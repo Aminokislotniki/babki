@@ -98,9 +98,9 @@ def stavka(list):
     stavka_keyboard.add(*button_list, button_one,button_two,button_tree,button_four,button_five)
     return stavka_keyboard
 
-def card_view_keyboard(id_lot, type_to_back_menu):
+def card_view_keyboard(id_lot, type):
     keyboard = InlineKeyboardMarkup()
-    button_edit = (InlineKeyboardButton("редактировать", callback_data="se*" + str(id_lot)))
+    button_edit = (InlineKeyboardButton("редактировать", callback_data="se*" + type + ":" + str(id_lot)))
     #returntomenu = InlineKeyboardButton(text="назад", callback_data=type_to_back_menu)
     exitbutton = InlineKeyboardButton(text="выход", callback_data="sq")
 
@@ -108,11 +108,12 @@ def card_view_keyboard(id_lot, type_to_back_menu):
     keyboard.add(exitbutton)
     return keyboard
 
-def edit_card_keyboard(id_lot):
+def edit_card_keyboard(id_lot, type_lot):
+    print("edit_card_keyboard", type_lot)
     keyboard = InlineKeyboardMarkup(row_width=2)
     names = ["Название","Описание", "Город", "Условия доставки", "Стартовая цена"]
-    button_list = [InlineKeyboardButton(text=x, callback_data="se:" + str(id_lot) + "*" + x) for x in names]
-    save_button = InlineKeyboardButton(text="Сохранить", callback_data="sw*" + str(id_lot))
+    button_list = [InlineKeyboardButton(text=x, callback_data="se:" + type_lot + "*" + str(id_lot) + "?" + x) for x in names]
+    save_button = InlineKeyboardButton(text="Сохранить", callback_data="sw*" + type_lot + ":" + str(id_lot))
     exitbutton = InlineKeyboardButton(text="Выход", callback_data="sq")
     keyboard.add(*button_list)
     keyboard.add(save_button)

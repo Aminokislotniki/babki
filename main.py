@@ -1,7 +1,7 @@
 import json
 from variables import bot
 from keyboards import type_of_lots_keyboard, active_lots_keyboard, nonpublic_lots_keyboard, card_view_keyboard, \
-    edit_card_keyboard
+    edit_card_keyboard, arhive_lots_keyboard
 from services_func import fs_serj, dt_serj, check_is_ban, check_is_admin, check_is_super_admin, id_lot, \
     view_card_of_lot, edit_caption, save_new_caption_lot
 from admin_add import create_new_admin_json
@@ -95,7 +95,7 @@ def call(call):
         if data[0] == ":":
             try:
                 text_card, dict_lot = view_card_of_lot(data[1:], bot, call.message.chat.id)
-                bot.send_photo(call.message.chat.id, dict_lot["lot_info"]["photo"], caption=text_card, reply_markup=card_view_keyboard(data[1:], "sa*0"))
+                bot.send_photo(call.message.chat.id, dict_lot["lot_info"]["photo"], caption=text_card, reply_markup=card_view_keyboard(data[1:], "a"))
             except:
                 bot.send_message(call.message.chat.id,"Что-то пошло не так")
 
@@ -121,12 +121,8 @@ def call(call):
 
         if data[0] == ":":
             try:
-                bot.delete_message(call.message.chat.id,call.message.message_id-1)
-                bot.send_message(call.message.chat.id, "ID лота = " + data[1:])
-                # тут должна быть попытка считать файл лота
-
-                # Должен быть вызов функции Кати - на вывод лота ( Либо же мой - на вывод + редактировать и опубликовать)
-                # !!! Обсудить на уроке
+                text_card, dict_lot = view_card_of_lot(data[1:], bot, call.message.chat.id)
+                bot.send_photo(call.message.chat.id, dict_lot["lot_info"]["photo"], caption=text_card, reply_markup=card_view_keyboard(data[1:], "n"))
             except:
                 bot.send_message(call.message.chat.id,"Что-то пошло не так")
 
@@ -144,7 +140,7 @@ def call(call):
                 if len(arhive_lots) > 0:
                     bot.edit_message_text(message_id=call.message.message_id, chat_id=call.message.chat.id,
                                           text="Выберете нужный лот\nстраница - " + str(page + 1),
-                                          reply_markup=nonpublic_lots_keyboard(arhive_lots, page))
+                                          reply_markup=arhive_lots_keyboard(arhive_lots, page))
                 else:
                     bot.send_message(call.message.chat.id, "Неопубликованных лотов не найдено")
             except Exception:
@@ -152,32 +148,42 @@ def call(call):
 
         if data[0] == ":":
             try:
-                bot.send_message(call.message.chat.id, "ID лота = " + data[1:])
-                # тут должна быть попытка считать файл лота
+                text_card, dict_lot = view_card_of_lot(data[1:], bot, call.message.chat.id)
+                bot.send_photo(call.message.chat.id, dict_lot["lot_info"]["photo"], caption=text_card, reply_markup=card_view_keyboard(data[1:], "r"))
 
                 # Должен быть вызов функции Кати - на вывод лота ( Либо же мой - на вывод + редактировать и опубликовать)
                 # !!! Обсудить на уроке
             except:
-                bot.send_message(call.message.chat.id,"Что-то пошло не так")
+                bot.send_message(call.message.chat.id, "Что-то пошло не так")
 
     if flag =="se":
         if data[0] =="*":
-            bot.edit_message_reply_markup(call.message.chat.id,call.message.message_id, reply_markup=edit_card_keyboard(data[1:]))
+            type_lot = data[1]
+            id_lot = data.split(":")
+            id_lot = id_lot[1]
+            print(type_lot, id_lot)
+            bot.edit_message_reply_markup(call.message.chat.id,call.message.message_id, reply_markup=edit_card_keyboard(id_lot, type_lot))
 
         if data[0] == ":":
-            edit_part = data.split("*")
+            type_lot = data[1]
+            edit_part = data.split("?")
             edit_part = edit_part[1]
             text_list = call.message.caption.split("\n")
-            lot_id = data[1:].split("*")
+            lot_id = data[3:].split("?")
             lot_id = lot_id[0]
+            print(type_lot, edit_part, lot_id)
             msg = bot.send_message(call.message.chat.id,"Для измениния поля - " + edit_part + ", отправьте сообщение в чат \n для выхода напишите /stop")
-            bot.register_next_step_handler(msg, edit_caption, bot, call, edit_part, lot_id)
+            bot.register_next_step_handler(msg, edit_caption, bot, call, edit_part, lot_id, type_lot)
 
     if flag =="sw":
         if data[0] =="*":
+            types = dict({"a": "lots", "n": "not_posted_lots", "r": "arhive"})
+            temp = data.split(":")
+            lot_id = temp[1]
+            type_lot = temp[0].replace("*", "")
+            type_lot = types[type_lot]
             caption = call.message.caption
-            lot_id = data[1:]
-            save_new_caption_lot(caption, lot_id, call.message.chat.id)
+            save_new_caption_lot(caption, lot_id, call.message.chat.id, type_lot, bot, call.message.chat.id)
 
 print("Ready")
 bot.infinity_polling()

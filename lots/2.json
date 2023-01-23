@@ -1,9 +1,9 @@
 {
     "lot_info": {
-        "lot_name": "active_lot_name",
-        "photo": "https://motor.ru/thumb/1280x720/filters:quality(75)/imgs/2020/09/07/14/4099186/52d8f45d1ae944564ab28538f5a79af4894c5106.jpg",
-        "description": "Новое описание",
-        "city": "Орша",
+        "lot_name": "new_name_np",
+        "photo": "https://avatarko.ru/img/kartinka/1/Crazy_Frog.jpg",
+        "description": "non_posted description",
+        "city": "Orsha",
         "delivery terms": "Евпропочтой",
         "start_price": "2000",
         "actual_price": "3000"

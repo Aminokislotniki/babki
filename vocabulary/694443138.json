@@ -6,106 +6,87 @@
     "lots": [
         {
             "lot_id": "1",
-            "lot_name": "serj"
-        },
-        {
-            "lot_id": "2",
-            "lot_name": "bmw"
-        },
-        {
-            "lot_id": "3",
-            "lot_name": "alfa"
+            "lot_name": "active_lot_name"
         },
         {
             "lot_id": "4",
-            "lot_name": "dodge"
+            "lot_name": "Пустышка (видно только iD)"
         },
         {
             "lot_id": "5",
-            "lot_name": "VW"
+            "lot_name": "Пустышка (видно только iD)"
         },
         {
             "lot_id": "6",
-            "lot_name": "tesla"
+            "lot_name": "Пустышка (видно только iD)"
         },
         {
             "lot_id": "7",
-            "lot_name": "bold"
+            "lot_name": "Пустышка (видно только iD)"
         },
         {
             "lot_id": "8",
-            "lot_name": "r5"
+            "lot_name": "Пустышка (видно только iD)"
         },
         {
             "lot_id": "9",
-            "lot_name": "x5"
+            "lot_name": "Пустышка (видно только iD)"
         },
         {
             "lot_id": "10",
-            "lot_name": "passat"
+            "lot_name": "Пустышка (видно только iD)"
         },
         {
             "lot_id": "11",
-            "lot_name": "gavno"
+            "lot_name": "Пустышка (видно только iD)"
         },
         {
             "lot_id": "12",
-            "lot_name": "bimivi"
+            "lot_name": "Пустышка (видно только iD)"
         },
         {
             "lot_id": "13",
-            "lot_name": "buggati"
+            "lot_name": "Пустышка (видно только iD)"
         },
         {
             "lot_id": "14",
-            "lot_name": "bmw"
+            "lot_name": "Пустышка (видно только iD)"
         },
         {
             "lot_id": "15",
-            "lot_name": "VW"
+            "lot_name": "Пустышка (видно только iD)"
         },
         {
             "lot_id": "16",
-            "lot_name": "tesla"
+            "lot_name": "Пустышка (видно только iD)"
         },
         {
             "lot_id": "17",
-            "lot_name": "audi"
+            "lot_name": "Пустышка (видно только iD)"
         },
         {
             "lot_id": "18",
-            "lot_name": "passat"
+            "lot_name": "Пустышка (видно только iD)"
         },
         {
             "lot_id": "19",
-            "lot_name": "gavno"
+            "lot_name": "Пустышка (видно только iD)"
         },
         {
             "lot_id": "20",
-            "lot_name": "bimivi"
-        },
-        {
-            "lot_id": "21",
-            "lot_name": "buggati"
-        },
-        {
-            "lot_id": "22",
-            "lot_name": "bmw"
+            "lot_name": "Пустышка (видно только iD)"
         }
     ],
     "not_posted_lots": [
         {
-            "lot_id": "1",
-            "lot_name": "audi"
-        },
-        {
             "lot_id": "2",
-            "lot_name": "bmw"
-        },
-        {
-            "lot_id": "3",
-            "lot_name": "alfa"
+            "lot_name": "new_name_np"
         }
     ],
-    "arhive": []
+    "arhive": [
+        {
+            "lot_id": "3",
+            "lot_name": "tiger"
+        }
+    ]
 }

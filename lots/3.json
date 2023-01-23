@@ -1,11 +1,11 @@
 {
     "lot_info": {
-        "lot_name": "active_lot_name",
-        "photo": "https://motor.ru/thumb/1280x720/filters:quality(75)/imgs/2020/09/07/14/4099186/52d8f45d1ae944564ab28538f5a79af4894c5106.jpg",
-        "description": "Новое описание",
-        "city": "Орша",
+        "lot_name": "tiger",
+        "photo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRoiJ6m6tZBcv9FLCkSh7pHAmpRLREJa8SiOw&usqp=CAU",
+        "description": "Описание архивное",
+        "city": "Архив",
         "delivery terms": "Евпропочтой",
-        "start_price": "2000",
+        "start_price": "2500",
         "actual_price": "3000"
     },
     "service_info": {
