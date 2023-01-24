@@ -61,6 +61,7 @@ def nonpublic_lots_keyboard(nonpublic_lots_list, page_number):
     return keyboard
 
 
+
 def arhive_lots_keyboard(arhive_lots_list, page_number):
     keyboard = InlineKeyboardMarkup(row_width=2)
     backbutton = InlineKeyboardButton(text="назад", callback_data="sr*" + str(page_number-1))

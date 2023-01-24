@@ -53,6 +53,7 @@ def check_is_super_admin(user_id, bot):
     except:
         print("что-то пошло не так в функции check_is_super_admin")
 
+
 def id_lot():
     f = open("users_statistics.json", "r", encoding="utf-8")
     buf = json.loads(f.read())

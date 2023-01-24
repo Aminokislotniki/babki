@@ -6,6 +6,7 @@ id_chanel = "@sandbox_chanell"
 from keyboards import stavka
 import json
 
+
 def post_lots(id_lot):
 
     f = open('lots/'+str(id_lot)+'.json', 'r', encoding='utf-8')

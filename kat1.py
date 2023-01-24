@@ -110,6 +110,7 @@ def call(call):
     if flag == "li":
         information(call.id)
 
+
 @bot.message_handler(commands=['new_car'])
 def star_new_car(message):
     global car_init_dict

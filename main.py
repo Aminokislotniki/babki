@@ -6,6 +6,7 @@ from services_func import fs_serj, dt_serj, check_is_ban, check_is_admin, check_
     view_card_of_lot, edit_caption, save_new_caption_lot, post_to_channel_by_id
 from admin_add import create_new_admin_json
 
+
 @bot.message_handler(commands=['start'])
 def statistics(message):
     print(message.text)

@@ -145,6 +145,7 @@ def min_stavka(message):
                                "что-то пошло не так, попробуй снова\nДля выхода пришли '/stop'\nДля обновления карточки пришли '/new_lot'")
         bot.register_next_step_handler(msg, min_stavka)
 
+
 def type_stavka(message):
     if message.text == "/new_lot":
         msg = bot.send_message(message.chat.id, "Начнём с начала.  Пришли название лота")
