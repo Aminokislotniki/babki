@@ -15,6 +15,7 @@ dict_lot={}
 
 
 
+
 @bot.message_handler(commands=['start'])
 def star_new_lot(message):
     id=(message.text)[7:]
