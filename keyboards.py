@@ -87,9 +87,10 @@ def arhive_lots_keyboard(arhive_lots_list, page_number):
     keyboard.add(returntomenu, exitbutton)
     return keyboard
 
-list = ["+10","+20","+30","+40", "+50","+60"]
 
-def stavka(list):
+
+def stavka():
+    list = ["+10", "+20", "+30", "+40", "+50", "+60"]
     stavka_keyboard = InlineKeyboardMarkup()
 
     button_list = [InlineKeyboardButton(text=x, callback_data="lf") for x in list]
@@ -101,6 +102,8 @@ def stavka(list):
 
     stavka_keyboard.add(*button_list, button_one,button_two,button_tree,button_four,button_five)
     return stavka_keyboard
+
+
 
 def stavka_canal(id_l):
     lot_keyboard = InlineKeyboardMarkup()
