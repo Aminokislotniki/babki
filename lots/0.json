@@ -1,0 +1,26 @@
+{
+  "lot_info": {
+                "lot_name": null,
+                "photo": null,
+                "description": null,
+                "city": null,
+                "delivery terms": null,
+                "user_name_admin": null,
+                "start_price": null,
+                "actual_price": null
+              },
+  "service_info": {
+                    "message_id_in_channel":null,
+                    "start_price": null,
+                    "id_admin": null,
+                    "status":null,
+                    "min_stavka": null,
+                    "type_stavka": null,
+                    "time_create": null,
+                    "winner_dict":{
+                              "user_name":null,
+                              "price_final": null
+                    }
+                  },
+  "history_bets": []
+}

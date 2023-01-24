@@ -1,32 +1,28 @@
 from telebot.types import ReplyKeyboardRemove, InputMediaPhoto
 import telebot
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
-bot = telebot.TeleBot('5683069905:AAGVpQBnaKoilz2UYWK1Ug3XoAENmDsTUyc')
+bot = telebot.TeleBot('5683069905:AAHpxtupIwvp19ybNfh0Gn2FbPVMEbKzKbs')
 id_chanel = "@sandbox_chanell"
-
+from keyboards import stavka
 import json
 
-f = open('lots/1.json', 'r', encoding='utf-8')
-dict_lot = json.loads(f.read())
-f.close()
+def post_lots(id_lot):
 
-
-def post_lot(dict_lot,message):
+    f = open('lots/'+str(id_lot)+'.json', 'r', encoding='utf-8')
+    dict_lot = json.loads(f.read())
+    f.close()
     buf=''
     for x in dict_lot:
+        print(x)
         if x=='lot_name':
-            buf+='lot_name '+(dict_lot[x])+"\n"
-        if x=='lot':
-            buf+='lot '+(dict_lot[x])+"\n"
-        if x=='winner':
-            buf+='winner '+(dict_lot[x])+"\n"
-        for i in dict_lot[x]:
-            if i=='price':
-                buf+='price '+(dict_lot[x][i])
+            buf+=(dict_lot[x])+"\n"
+        if x=="description":
+            buf+=(dict_lot[x])+"\n"
+        if x=="price":
+            buf+='Цена '+(dict_lot[x])
+
     print(buf)
-
-    bot.send_message(message.chat.id, buf, reply_markup=stavka(list))
-
+    return buf
 
 
-post_lot(dict_lot)
+

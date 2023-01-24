@@ -8,6 +8,8 @@ exitbutton = InlineKeyboardButton(text="выход", callback_data="sq")
 type_of_lots_keyboard.add(active_lots, nonpublic_lots, archive_lots)
 type_of_lots_keyboard.add(exitbutton)
 
+quit_only_keyboard = InlineKeyboardMarkup()
+quit_only_keyboard.add(InlineKeyboardButton("Выход", callback_data="sq"))
 
 def active_lots_keyboard(active_lots_list, page_number):
     keyboard = InlineKeyboardMarkup(row_width=2)
@@ -83,4 +85,43 @@ def arhive_lots_keyboard(arhive_lots_list, page_number):
     keyboard.add(returntomenu, exitbutton)
     return keyboard
 
+list = ["+10","+20","+30","+40", "+50","+60"]
 
+def stavka(list):
+    stavka_keyboard = InlineKeyboardMarkup()
+
+    button_list = [InlineKeyboardButton(text=x, callback_data="lf") for x in list]
+    button_one = (InlineKeyboardButton("старт", callback_data="ls"))
+    button_two = (InlineKeyboardButton("автоставка", callback_data="la" ))
+    button_tree = (InlineKeyboardButton("Отменить", callback_data="lb"))
+    button_four = (InlineKeyboardButton("время", callback_data="lt" ))
+    button_five = (InlineKeyboardButton("Информация", callback_data="li"))
+
+    stavka_keyboard.add(*button_list, button_one,button_two,button_tree,button_four,button_five)
+    return stavka_keyboard
+
+def card_view_keyboard(id_lot, type):
+    keyboard = InlineKeyboardMarkup()
+    button_edit = (InlineKeyboardButton("Редактировать", callback_data="se*" + type + ":" + str(id_lot)))
+    button_public_in_channel = (InlineKeyboardButton("Опубликовать", callback_data="sp*" + str(id_lot)))
+    exitbutton = InlineKeyboardButton(text="Выход", callback_data="sq")
+    keyboard.add(button_edit)
+    if type =="n":
+        keyboard.add(button_public_in_channel)
+    keyboard.add(exitbutton)
+    return keyboard
+
+def edit_card_keyboard(id_lot, type_lot):
+    print("edit_card_keyboard", type_lot)
+    keyboard = InlineKeyboardMarkup(row_width=2)
+    names = ["Название","Описание", "Город", "Условия доставки", "Стартовая цена"]
+    button_list = [InlineKeyboardButton(text=x, callback_data="se:" + type_lot + "*" + str(id_lot) + "?" + x) for x in names]
+    save_button = InlineKeyboardButton(text="Сохранить", callback_data="sw*" + type_lot + ":" + str(id_lot))
+    button_public_in_channel = (InlineKeyboardButton("Опубликовать", callback_data="sp*" + str(id_lot)))
+    exitbutton = InlineKeyboardButton(text="Выход", callback_data="sq")
+    keyboard.add(*button_list)
+    keyboard.add(save_button)
+    if type_lot == "n":
+        keyboard.add(button_public_in_channel)
+    keyboard.add(exitbutton)
+    return keyboard
