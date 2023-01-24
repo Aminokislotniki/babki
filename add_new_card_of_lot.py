@@ -14,13 +14,27 @@ lot_init_dict={}
 dict_lot={}
 
 
-
-
 @bot.message_handler(commands=['start'])
-def star_new_lot(message):
-    id=(message.text)[7:]
+def star_lot(message):
+    id_ll=(message.text)[7:]
+    buf,dict_lot,photo,min_stavka=post_lots(id_ll)
+
+    # print(id_ll)
+    # f = open('lots/' + str(id_ll) + '.json', 'r', encoding='utf-8')
+    # dict_lots = json.loads(f.read())
+    # f.close()
+    # buf=""
+    # for z in dict_lot:
+    #     for x in dict_lot[z]:
+    #         if x=='lot_name':
+    #             buf+=(dict_lot[z][x])+"\n"
+    #         if x=="description":
+    #             buf+=(dict_lot[z][x])+"\n"
+    #         if x=="start_price" and z=="lot_info":
+    #             buf+='Цена:'+str(dict_lot[z][x])
     bot.send_message(message.chat.id,"Привет ,я бот аукционов Я помогу вам следить за выбранными лотами ,и регулировать ход аукциона.Удачных торгов 🤝 ")
-    bot.send_photo(message.chat.id, photo=post_lots(id), caption=post_lots(id), reply_markup=stavka(list))
+    bot.send_photo(message.chat.id,photo=photo,  caption=buf,reply_markup=stavka(min_stavka))
+
 
 @bot.message_handler(commands=['new_lot'])
 def star_new_lot(message):
@@ -173,6 +187,8 @@ def type_stavka(message):
                                "что-то пошло не так, попробуй снова\nДля выхода пришли '/stop'\nДля обновления карточки пришли '/new_lot'")
         bot.register_next_step_handler(msg, type_stavka)
 
+
+
 def photo_lot(message):
     if message.text == "/new_lot":
         msg = bot.send_message(message.chat.id, "Начнём с начала. Пришли название лота")
@@ -214,8 +230,9 @@ def convert_sec(times):
     sec=times
     t=("\n%d дня, %d часа, %d минуты, %d секунды" % (days, hour, min, sec))
     return t
-def time_lot(call_id):
-    f = open('lots/35.json', 'r', encoding='utf-8')
+def time_lot(call_id,data):
+    print("id_ll")
+    f = open('lots/'+str(data)+'.json', 'r', encoding='utf-8')
     dict_lot = json.loads(f.read())
     f.close()
     time_today=(int(time.time()))
@@ -271,7 +288,9 @@ def call(call):
         print(call)
 
     if flag == "lt":
-        time_lot(call.id)
+        data=(call.data)[3:]
+        print(data)
+        time_lot(call.id,data)
 
     if flag == "li":
         information(call.id)

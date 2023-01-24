@@ -89,26 +89,29 @@ def arhive_lots_keyboard(arhive_lots_list, page_number):
 
 
 
-def stavka():
+def stavka(min_stavka):
+    #m=post_lots(id_lot)
+    print(min_stavka)
+
     list = ["+10", "+20", "+30", "+40", "+50", "+60"]
     stavka_keyboard = InlineKeyboardMarkup()
 
     button_list = [InlineKeyboardButton(text=x, callback_data="lf") for x in list]
-    button_one = (InlineKeyboardButton("старт", callback_data="ls"))
-    button_two = (InlineKeyboardButton("автоставка", callback_data="la" ))
+    button_one = (InlineKeyboardButton("Участвовать", callback_data="ls"))
+    button_two = (InlineKeyboardButton("Автоставка", callback_data="la" ))
     button_tree = (InlineKeyboardButton("Отменить", callback_data="lb"))
-    button_four = (InlineKeyboardButton("время", callback_data="lt" ))
+    button_four = (InlineKeyboardButton("Время", callback_data="lt" ))
     button_five = (InlineKeyboardButton("Информация", callback_data="li"))
 
     stavka_keyboard.add(*button_list, button_one,button_two,button_tree,button_four,button_five)
     return stavka_keyboard
 
 
-
+#
 def stavka_canal(id_l):
     lot_keyboard = InlineKeyboardMarkup()
     button_tree = (InlineKeyboardButton("Участвовать",url="https://t.me/aminokislotnik_bot?start="+str(id_l), callback_data="ly"))
-    button_four = (InlineKeyboardButton("время", callback_data="lt" ))
+    button_four = (InlineKeyboardButton("время", callback_data="lt*"+str(id_l)))
     button_five = (InlineKeyboardButton("Информация", callback_data="li"))
     lot_keyboard.add(button_tree,
                       button_four,button_five)
@@ -116,7 +119,7 @@ def stavka_canal(id_l):
 
 def keyboard_lot_bot():
     keyboard_lot_bot = InlineKeyboardMarkup()
-    button_1 = (InlineKeyboardButton("Сохранить", callback_data="ls"))
+    button_1 = (InlineKeyboardButton("Опубликовать", callback_data="ls"))
     button_2 = (InlineKeyboardButton("Удалить", callback_data="ld"))
     keyboard_lot_bot.add(button_1, button_2)
     return keyboard_lot_bot
