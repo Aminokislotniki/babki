@@ -1,5 +1,6 @@
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 
+
 type_of_lots_keyboard = InlineKeyboardMarkup()
 active_lots = InlineKeyboardButton("Активные", callback_data="sa*0")
 nonpublic_lots = InlineKeyboardButton("Неопубликованные", callback_data="sn*0")
