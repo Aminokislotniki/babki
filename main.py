@@ -8,6 +8,7 @@ from admin_add import create_new_admin_json
 
 @bot.message_handler(commands=['start'])
 def statistics(message):
+    print(message.text)
     try:
         f = open("users_statistics.json", 'r', encoding='utf-8')
         buf_statistics = json.loads(f.read())

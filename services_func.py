@@ -85,7 +85,10 @@ def view_card_of_lot(lot_id, bot, chat_id):
 
 def edit_caption(message,bot, call, edit_part, id_lot, type_lot):
     if message.text == "/stop":
-        bot.send_message(message.chat.id, "Вы вышли из редактирования")
+        bot.delete_message(message.chat.id, message.message_id)
+        bot.delete_message(message.chat.id, message.message_id - 1)
+        bot.delete_message(message.chat.id, message.message_id - 2)
+        bot.send_message(message.chat.id, "Вы вышли из редактирования", reply_markup=quit_only_keyboard)
     elif message.content_type == "text":
         old_caption = call.message.caption
         old_caption = old_caption.split("\n")
