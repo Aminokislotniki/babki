@@ -98,24 +98,6 @@ def stavka(list):
     stavka_keyboard.add(*button_list, button_one,button_two,button_tree,button_four,button_five)
     return stavka_keyboard
 
-def stavka_canal(id_l):
-    lot_keyboard = InlineKeyboardMarkup()
-    button_tree = (InlineKeyboardButton("Участвовать",url="https://t.me/aminokislotnik_bot?start="+str(id_l), callback_data="ly"))
-    button_four = (InlineKeyboardButton("время", callback_data="lt" ))
-    button_five = (InlineKeyboardButton("Информация", callback_data="li"))
-    lot_keyboard.add(button_tree,
-                      button_four,button_five)
-    return lot_keyboard
-
-def keyboard_lot_bot():
-    keyboard_lot_bot = InlineKeyboardMarkup()
-    button_1 = (InlineKeyboardButton("Сохранить", callback_data="ls"))
-    button_2 = (InlineKeyboardButton("Удалить", callback_data="ld"))
-    keyboard_lot_bot.add(button_1, button_2)
-    return keyboard_lot_bot
-
-
-
 def card_view_keyboard(id_lot, type_to_back_menu):
     keyboard = InlineKeyboardMarkup()
     button_edit = (InlineKeyboardButton("редактировать", callback_data="se*" + str(id_lot)))
