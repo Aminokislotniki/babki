@@ -6,7 +6,7 @@
             "name":""},
     "lots":[
             {"lot_id":"1", "lot_name":"audi"},
-            {"lot_id":"","lot_name":""}
+            {"lot_id":"2","lot_name":"пустышка"}
             ],
     "not_posted_lots":[
         {"lot_id":"","lot_name":""},

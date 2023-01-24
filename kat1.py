@@ -89,8 +89,6 @@ def welcome(message):
     check_is_ban(user_id)
 
 
-
-
 @bot.callback_query_handler(func=lambda call: True)
 def call(call):
     id = call.message.chat.id
