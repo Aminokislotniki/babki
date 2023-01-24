@@ -8,8 +8,6 @@ exitbutton = InlineKeyboardButton(text="выход", callback_data="sq")
 type_of_lots_keyboard.add(active_lots, nonpublic_lots, archive_lots)
 type_of_lots_keyboard.add(exitbutton)
 
-quit_only_keyboard = InlineKeyboardMarkup()
-quit_only_keyboard.add(InlineKeyboardButton("Выход", callback_data="sq"))
 
 def active_lots_keyboard(active_lots_list, page_number):
     keyboard = InlineKeyboardMarkup(row_width=2)
@@ -99,29 +97,36 @@ def stavka(list):
 
     stavka_keyboard.add(*button_list, button_one,button_two,button_tree,button_four,button_five)
     return stavka_keyboard
+def stavka_canal(id_l):
+    lot_keyboard = InlineKeyboardMarkup()
+    button_tree = (InlineKeyboardButton("Участвовать",url="https://t.me/aminokislotnik_bot?start="+str(id_l), callback_data="ly"))
+    button_four = (InlineKeyboardButton("время", callback_data="lt" ))
+    button_five = (InlineKeyboardButton("Информация", callback_data="li"))
+    lot_keyboard.add(button_tree,
+                      button_four,button_five)
+    return lot_keyboard
 
-def card_view_keyboard(id_lot, type):
+def keyboard_lot_bot():
+    keyboard_lot_bot = InlineKeyboardMarkup()
+    button_1 = (InlineKeyboardButton("Сохранить", callback_data="ls"))
+    button_2 = (InlineKeyboardButton("Удалить", callback_data="ld"))
+    keyboard_lot_bot.add(button_1, button_2)
+    return keyboard_lot_bot
+def card_view_keyboard(id_lot, type_to_back_menu):
     keyboard = InlineKeyboardMarkup()
-    button_edit = (InlineKeyboardButton("Редактировать", callback_data="se*" + type + ":" + str(id_lot)))
-    button_public_in_channel = (InlineKeyboardButton("Опубликовать", callback_data="sp*" + str(id_lot)))
-    exitbutton = InlineKeyboardButton(text="Выход", callback_data="sq")
+    button_edit = (InlineKeyboardButton("редактировать", callback_data="se*" + str(id_lot)))
+    #returntomenu = InlineKeyboardButton(text="назад", callback_data=type_to_back_menu)
+    exitbutton = InlineKeyboardButton(text="выход", callback_data="sq")
+
     keyboard.add(button_edit)
-    if type =="n":
-        keyboard.add(button_public_in_channel)
     keyboard.add(exitbutton)
     return keyboard
 
-def edit_card_keyboard(id_lot, type_lot):
-    print("edit_card_keyboard", type_lot)
+def edit_card_keyboard(id_lot):
     keyboard = InlineKeyboardMarkup(row_width=2)
-    names = ["Название","Описание", "Город", "Условия доставки", "Стартовая цена"]
-    button_list = [InlineKeyboardButton(text=x, callback_data="se:" + type_lot + "*" + str(id_lot) + "?" + x) for x in names]
-    save_button = InlineKeyboardButton(text="Сохранить", callback_data="sw*" + type_lot + ":" + str(id_lot))
-    button_public_in_channel = (InlineKeyboardButton("Опубликовать", callback_data="sp*" + str(id_lot)))
-    exitbutton = InlineKeyboardButton(text="Выход", callback_data="sq")
+    names = ["Названия лота", "Фото", "Описание", "Город", "Условия доставки", "Стартовая цена"]
+    button_list = [InlineKeyboardButton(text=x, callback_data="se:" + str(id_lot) + "*" + x) for x in names]
+    exitbutton = InlineKeyboardButton(text="выход", callback_data="sq")
     keyboard.add(*button_list)
-    keyboard.add(save_button)
-    if type_lot == "n":
-        keyboard.add(button_public_in_channel)
     keyboard.add(exitbutton)
     return keyboard

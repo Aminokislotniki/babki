@@ -7,16 +7,21 @@ from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 from services_func import dt_serj,fs_serj,id_lot
 from post_lot import post_lots
 from variables import bot
-#bot = telebot.TeleBot('5683069905:AAHpxtupIwvp19ybNfh0Gn2FbPVMEbKzKbs')
+from keyboards import stavka_canal,keyboard_lot_bot,stavka
+#bot = telebot.TeleBot('5683069905:AAHCr6JGd2ztVfZMD-zWvebA3-P20qqCehI')
 id_chanel = "@projectlimonbot"
 lot_init_dict={}
 dict_lot={}
 
 
-#bot.send_message(id_chanel, "А как тут команды вызвать?")
+
+
 @bot.message_handler(commands=['start'])
 def star_new_lot(message):
-    print(message)
+    id=(message.text)[7:]
+    bot.send_message(message.chat.id,"Привет ,я бот аукционов Я помогу вам следить за выбранными лотами ,и регулировать ход аукциона.Удачных торгов 🤝 ")
+    bot.send_photo(message.chat.id, photo=post_lots(id), caption=post_lots(id), reply_markup=stavka(list))
+
 @bot.message_handler(commands=['new_lot'])
 def star_new_lot(message):
     #global lot_init_dict
@@ -180,14 +185,12 @@ def photo_lot(message):
         bot.delete_message(message.chat.id, message.message_id - 1)
         bot.delete_message(message.chat.id, message.message_id - 2)
         #bot.delete_message(message.chat.id, message.message_id - 3)
-        keyboard_lot = InlineKeyboardMarkup()
-        button_1 = (InlineKeyboardButton("Сохранить", callback_data="ls"))
-        button_2 = (InlineKeyboardButton("Удалить", callback_data="ld"))
-        keyboard_lot.add(button_1, button_2)
+
         photo1=( message.photo[-1].file_id)
         dict_lot["service_info"] .update( {"id_admin": message.from_user.id})
         bot.send_photo(message.chat.id, photo1,lot_obj_lot(lot_init_dict[message.chat.id]))
-        bot.send_message(message.chat.id,"Вот карточка лота.\nЧто делаем дальше?\nНажми сохранить\n Переходи в канал для опубликования: https://t.me/projectlimonbot\nдля создания нового лота пришли '/new_lot'",reply_markup=keyboard_lot)
+        bot.send_message(message.chat.id,"Вот карточка лота.\nЧто делаем дальше?\nНажми сохранить\n Переходи в канал для опубликования: https://t.me/projectlimonbot\n"
+                                         "для создания нового лота пришли '/new_lot'",reply_markup=keyboard_lot_bot())
         dict_lot["lot_info"].update( {"user_name_admin": message.from_user.username})
         dict_lot["lot_info"].update({'photo':photo1})
 
@@ -197,61 +200,68 @@ def photo_lot(message):
                                "что-то пошло не так, попробуй снова\nДля выхода пришли '/stop'\nДля обновления карточки пришли '/new_lot'")
         bot.register_next_step_handler(msg, photo_lot)
 
-def stavka_canal():
-    lot_keyboard = InlineKeyboardMarkup()
-    button_tree = (InlineKeyboardButton("Участвовать",url="https://t.me/aminokislotnik_bot", callback_data="ly"))
-    button_four = (InlineKeyboardButton("время", callback_data="lt" ))
-    button_five = (InlineKeyboardButton("Информация", callback_data="li"))
-    lot_keyboard.add( button_tree,button_four,button_five)
-    return lot_keyboard
+def convert_sec(times):
+    sec_to_min=60
+    sec_to_hour=60*sec_to_min
+    sec_to_day=24*sec_to_hour
+    days=times//sec_to_day
+    times %=sec_to_day
+    hour = times//sec_to_hour
+    times %= sec_to_hour
+    min = times//sec_to_min
+    times %= sec_to_min
+    sec=times
+    t=("\n%d дня, %d часа, %d минуты, %d секунды" % (days, hour, min, sec))
+    return t
+def time_lot(call_id):
+    f = open('lots/35.json', 'r', encoding='utf-8')
+    dict_lot = json.loads(f.read())
+    f.close()
+    time_today=(int(time.time()))
+    time_break=""
+    a=60*60*24*5
+    for z in dict_lot:
+        for x in dict_lot[z]:
+            if x == "time_create":
+                time_break += str(dict_lot[z][x])
+    time_break=int(time_break)+a
+    print(time_break)
+    print(time_today)
+    times = int(time_break)-time_today
+    if times > 0:
+        bot.answer_callback_query(call_id, "аукцион закончиться через \n "+convert_sec(times), show_alert=False)
+    else:
+        bot.answer_callback_query(call_id, "Аукцион уже закончен, участие невозможно,\n посмотрите другие лоты" , show_alert=False)
 
-
-buf=""
-
-# def post_lots(id_lot):
-#
-#     print("post_lots")
-#     f = open('lots/'+str(id_lot)+'.json', 'r', encoding='utf-8')
-#     dict_lot = json.loads(f.read())
-#     f.close()
-#     buf=''
-#     for x in dict_lot:
-#         print(x)
-#         if x=='lot_name':
-#             buf+=(dict_lot[x])+"\n"
-#         if x=="description":
-#             buf+=(dict_lot[x])+"\n"
-#         if x=="price":
-#             buf+='Цена '+(dict_lot[x])
-#
-#     #bot.send_photo(id_chanel,dict_lot["lot_info"]["photo"],caption=buf,reply_markup=stavka_canal())
-#     print(buf)
-#     return buf
-
-
+def information(call_id):
+    bot.answer_callback_query(call_id, "Ставку можно отменить в течении 1 минуты, нажав на кнопку Отмена."
+                                       "Выигранный лот необходимо выкупить в течении 5 дней, в противном случае БАН на 5 дней!!!", show_alert=True)
 @bot.callback_query_handler(func=lambda call: True)
 def call(call):
     id = call.message.chat.id
     flag =fs_serj(call.data)
     data = dt_serj (call.data)
-
     # bot.answer_callback_query(callback_query_id=call.id)
 
     if flag == "ls":
-
         bot.answer_callback_query(callback_query_id=call.id)
+        dict_lot["lot_info"].update({ "actual_price": None })
+        dict_lot["service_info"].update({"message_id_in_channel":None})
         dict_lot["service_info"] .update({"status": "activ"})
-        dict_lot["service_info"] .update( {"time_create": (int(time.time()))})
+        dict_lot["service_info"] .update({"time_create": (int(time.time()))})
+        dict_lot["service_info"].update({"winner_dict":{"user_name":None, "price_final": None}})
+        dict_lot["history_bets"] = []
         id_l=id_lot()
         with open('lots/'+str(id_l)+'.json', 'w', encoding='utf-8') as f:
             json.dump(dict_lot, f, ensure_ascii=False, indent=15)
-        post_lots(id_l)
 
-        bot.send_photo(id_chanel, dict_lot ["lot_info"]["photo"], caption=buf, reply_markup=stavka_canal())
+        bot.send_photo(id_chanel, dict_lot ["lot_info"]["photo"], caption=post_lots(id_l), reply_markup=stavka_canal(id_l))
+        bot.delete_message(call.message.chat.id,call.message.message_id)
+        bot.delete_message(call.message.chat.id, call.message.message_id-1)
+
 
 
     if flag == "ld":
-        #print(call.data)
         bot.answer_callback_query(callback_query_id=call.id)
         bot.send_message(id, " попробуй снова, пришли '/new_lot'")
         dict_lot.clear()
@@ -259,6 +269,11 @@ def call(call):
     if flag=="ly":
         print(call)
 
+    if flag == "lt":
+        time_lot(call.id)
+
+    if flag == "li":
+        information(call.id)
 
 #bot.send_photo(2077212957,"AgACAgIAAxkBAAIicGPLzbi0TdFyeMpjwj90yzAsu7mBAAI_xTEbO7VhSiazPrxb8uMrAQADAgADeQADLQQ",caption="dd")
 
