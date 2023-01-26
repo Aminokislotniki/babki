@@ -7,33 +7,32 @@ from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 from services_func import dt_serj,fs_serj,id_lot
 from post_lot import post_lots
 from variables import bot
-from keyboards import stavka_canal,keyboard_lot_bot,stavka
+from keyboards import stavka_canal,keyboard_lot_bot,stavka,stavka1
 #bot = telebot.TeleBot('5683069905:AAHCr6JGd2ztVfZMD-zWvebA3-P20qqCehI')
 id_chanel = "@projectlimonbot"
 lot_init_dict={}
 dict_lot={}
-
+id_l=""
 
 @bot.message_handler(commands=['start'])
 def star_lot(message):
     id_ll=(message.text)[7:]
-    buf,dict_lot,photo,min_stavka=post_lots(id_ll)
-
-    # print(id_ll)
+    buf,photo,times=post_lots(id_ll)
+    print(id_ll)
     # f = open('lots/' + str(id_ll) + '.json', 'r', encoding='utf-8')
     # dict_lots = json.loads(f.read())
     # f.close()
     # buf=""
     # for z in dict_lot:
-    #     for x in dict_lot[z]:
+    #     for x in dict_lots[z]:
     #         if x=='lot_name':
-    #             buf+=(dict_lot[z][x])+"\n"
+    #             buf+=(dict_lots[z][x])+"\n"
     #         if x=="description":
-    #             buf+=(dict_lot[z][x])+"\n"
+    #             buf+=(dict_lots[z][x])+"\n"
     #         if x=="start_price" and z=="lot_info":
-    #             buf+='Цена:'+str(dict_lot[z][x])
+    #             buf+='Цена:'+str(dict_lots[z][x])
     bot.send_message(message.chat.id,"Привет ,я бот аукционов Я помогу вам следить за выбранными лотами ,и регулировать ход аукциона.Удачных торгов 🤝 ")
-    bot.send_photo(message.chat.id,photo=photo,  caption=buf,reply_markup=stavka(min_stavka))
+    bot.send_photo(message.chat.id,photo=photo,  caption=buf,reply_markup=stavka(id_ll))
 
 
 @bot.message_handler(commands=['new_lot'])
@@ -263,7 +262,7 @@ def call(call):
 
     if flag == "ls":
         bot.answer_callback_query(callback_query_id=call.id)
-        dict_lot["lot_info"].update({ "actual_price": None })
+        dict_lot["lot_info"].update({"actual_price":None})
         dict_lot["service_info"].update({"message_id_in_channel":None})
         dict_lot["service_info"] .update({"status": "activ"})
         dict_lot["service_info"] .update({"time_create": (int(time.time()))})
@@ -277,23 +276,24 @@ def call(call):
         bot.delete_message(call.message.chat.id,call.message.message_id)
         bot.delete_message(call.message.chat.id, call.message.message_id-1)
 
-
-
     if flag == "ld":
         bot.answer_callback_query(callback_query_id=call.id)
         bot.send_message(id, " попробуй снова, пришли '/new_lot'")
         dict_lot.clear()
 
     if flag=="ly":
-        print(call)
+        id_l=(call.data)[2:]
+        bot.send_message(id, " Ваша ставка принята",reply_markup=stavka1(id_l))
 
     if flag == "lt":
-        data=(call.data)[3:]
+        data=(call.data)[2:]
         print(data)
         time_lot(call.id,data)
 
     if flag == "li":
         information(call.id)
+
+
 
 #bot.send_photo(2077212957,"AgACAgIAAxkBAAIicGPLzbi0TdFyeMpjwj90yzAsu7mBAAI_xTEbO7VhSiazPrxb8uMrAQADAgADeQADLQQ",caption="dd")
 

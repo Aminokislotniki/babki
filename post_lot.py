@@ -3,7 +3,7 @@ import telebot
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 bot = telebot.TeleBot('5683069905:AAHpxtupIwvp19ybNfh0Gn2FbPVMEbKzKbs')
 id_chanel = "@sandbox_chanell"
-from keyboards import stavka_canal
+#from keyboards import stavka_canal
 import json
 
 
@@ -13,6 +13,8 @@ def post_lots(id_lot):
     f.close()
     buf=''
     photo=""
+    min_stavka=0
+    times=''
     for z in dict_lot:
         for x in dict_lot[z]:
             if x=='lot_name':
@@ -22,9 +24,13 @@ def post_lots(id_lot):
             if x=="start_price" and z=="lot_info":
                 buf+='Цена:'+str(dict_lot[z][x])
             if x=="photo":
-                photo=x
-    print(photo)
-    return buf,dict_lot,photo
+                photo=(dict_lot[z][x])
+            if x=="min_stavka":
+                min_stavka=dict_lot[z][x]
+            if x=="time_create":
+                times=dict_lot[z][x]
+    print(photo,min_stavka)
+    return buf,photo,times
 
 
 
