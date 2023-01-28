@@ -3,6 +3,7 @@ from telebot.types import ReplyKeyboardRemove, InputMediaPhoto
 import time
 import telebot
 import json
+from datetime import datetime, timedelta
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 from services_func import dt_serj,fs_serj,id_lot
 from post_lot import post_lots
@@ -17,7 +18,7 @@ id_l=""
 @bot.message_handler(commands=['start'])
 def star_lot(message):
     id_ll=(message.text)[7:]
-    buf,photo,times=post_lots(id_ll)
+    buf,photo,times,min_stavka,start_price=post_lots(id_ll)
     print(id_ll)
     # f = open('lots/' + str(id_ll) + '.json', 'r', encoding='utf-8')
     # dict_lots = json.loads(f.read())
@@ -39,11 +40,13 @@ def star_lot(message):
 def star_new_lot(message):
     #global lot_init_dict
     lot_init_dict[message.chat.id] = ""
-    text = "Для добавления нового лота - нужно будет заполнить все сведения о нём\n" \
+    text = "Так будет выглядеть опубликованный лот\n" \
             "Для этого нужно пройтись по дальнейшим шагам \nудачи :)\n\n" \
             "Начнём - напишите  название лота\n\n" \
 
-    msg = bot.send_message(message.chat.id, text)
+    #msg = bot.send_message(message.chat.id, text)
+    photo=open(r"C:\Users\37529\PycharmProjects\pythonProject4\Снимок экрана 2023-01-28 214100.png","rb")
+    msg=bot.send_photo(message.chat.id, photo=photo, caption=text)
     bot.register_next_step_handler(msg, lot)
 
 class Lot:
@@ -88,7 +91,7 @@ def lot(message):
         bot.register_next_step_handler(msg, description)
     else:
         msg = bot.send_message(message.chat.id,
-                           "что-то пошло не так, попробуй снова\nДля выхода пришли '/stop'\nДля обновления карточки пришли '/new_lot'")
+                           "Ты неверно написал, напиши снова или\nДля выхода пришли '/stop'\nДля обновления карточки пришли '/new_lot'")
         bot.register_next_step_handler(msg, lot)
 
 def description(message):
@@ -112,7 +115,7 @@ def description(message):
 
     else:
         msg = bot.send_message(message.chat.id,
-                           "что-то пошло не так, попробуй снова\nДля выхода пришли '/stop'\nДля обновления карточки пришли '/new_lot'")
+                           "Ты неверно написал, напиши снова или\nДля выхода пришли '/stop'\nДля обновления карточки пришли '/new_lot'")
         bot.register_next_step_handler(msg, description)
 
 def price(message):
@@ -123,7 +126,7 @@ def price(message):
     elif message.text == "/stop":
         bot.send_message(message.chat.id, "Вы вышли из добaвления лота")
 
-    elif message.content_type == "text" and message.text.replace(" ", "") != "" and message.text.isdigit():
+    elif message.content_type == "text" and message.text.replace(" ", "") != "" and message.text.isdigit() and message.text>0:
         lot_init_dict[message.chat.id].price = message.text
         dict_lot["service_info"]={}
         dict_lot ["lot_info"].update({"start_price":int(message.text)})
@@ -137,7 +140,7 @@ def price(message):
         bot.register_next_step_handler(msg, min_stavka)
     else:
         msg = bot.send_message(message.chat.id,
-                           "что-то пошло не так, попробуй снова\nДля выхода пришли '/stop'\nДля обновления карточки пришли '/new_lot'")
+                           "Ты неверно написал, напиши снова или\nДля выхода пришли '/stop'\nДля обновления карточки пришли '/new_lot'")
         bot.register_next_step_handler(msg,price)
 
 def min_stavka(message):
@@ -148,19 +151,19 @@ def min_stavka(message):
     elif message.text == "/stop":
         bot.send_message(message.chat.id, "Вы вышли из добaвления лота")
 
-    elif message.content_type == "text" and message.text.replace(" ", "") != ""and message.text.isdigit():
+    elif message.content_type == "text" and message.text.replace(" ", "") != ""and message.text.isdigit()and message.text>0:
         lot_init_dict[message.chat.id].min_stavka = message.text
         dict_lot["service_info"].update({"min_stavka":int(message.text)})
         bot.send_message(message.chat.id, lot_obj_lot(lot_init_dict[message.chat.id]))
         bot.delete_message(message.chat.id, message.message_id)
         bot.delete_message(message.chat.id, message.message_id - 1)
         bot.delete_message(message.chat.id, message.message_id - 2)
-        msg = bot.send_message(message.chat.id, "Теперь отправьте тип ставки:\n цифра '1'-% от стоимости (от 2 до 10, но не меньше) "
+        msg = bot.send_message(message.chat.id, "Теперь отправьте тип ставки:\n цифра '1'-% от стартовой цены (от 2 до 50, но не меньше) "
                                                 "минимальной ставки\n-или введи шаг ставки")
         bot.register_next_step_handler(msg, type_stavka)
     else:
         msg = bot.send_message(message.chat.id,
-                               "что-то пошло не так, попробуй снова\nДля выхода пришли '/stop'\nДля обновления карточки пришли '/new_lot'")
+                               "Ты неверно написал, напиши снова или\nДля выхода пришли '/stop'\nДля обновления карточки пришли '/new_lot'")
         bot.register_next_step_handler(msg, min_stavka)
 
 
@@ -172,7 +175,7 @@ def type_stavka(message):
     elif message.text == "/stop":
         bot.send_message(message.chat.id, "Вы вышли из добaвления лота")
 
-    elif message.content_type == "text" and message.text.replace(" ", "") != ""and message.text.isdigit():
+    elif message.content_type == "text" and message.text.replace(" ", "") != ""and message.text.isdigit() and message.text>0:
         lot_init_dict[message.chat.id].type_stavka = message.text
         dict_lot["service_info"].update({"type_stavka":int(message.text)})
         bot.send_message(message.chat.id, lot_obj_lot(lot_init_dict[message.chat.id]))
@@ -183,7 +186,7 @@ def type_stavka(message):
         bot.register_next_step_handler(msg, photo_lot)
     else:
         msg = bot.send_message(message.chat.id,
-                               "что-то пошло не так, попробуй снова\nДля выхода пришли '/stop'\nДля обновления карточки пришли '/new_lot'")
+                               "Ты неверно написал, напиши снова или\nДля выхода пришли '/stop'\nДля обновления карточки пришли '/new_lot'")
         bot.register_next_step_handler(msg, type_stavka)
 
 
@@ -200,12 +203,11 @@ def photo_lot(message):
         bot.delete_message(message.chat.id, message.message_id)
         bot.delete_message(message.chat.id, message.message_id - 1)
         bot.delete_message(message.chat.id, message.message_id - 2)
-        #bot.delete_message(message.chat.id, message.message_id - 3)
 
         photo1=( message.photo[-1].file_id)
         dict_lot["service_info"] .update( {"id_admin": message.from_user.id})
         bot.send_photo(message.chat.id, photo1,lot_obj_lot(lot_init_dict[message.chat.id]))
-        bot.send_message(message.chat.id,"Вот карточка лота.\nЧто делаем дальше?\nНажми сохранить\n Переходи в канал для опубликования: https://t.me/projectlimonbot\n"
+        bot.send_message(message.chat.id,"Вот карточка лота.\nЧто делаем дальше?\nНажми опубликовать\n Переходи в канал для опубликования: https://t.me/projectlimonbot\n"
                                          "для создания нового лота пришли '/new_lot'",reply_markup=keyboard_lot_bot())
         dict_lot["lot_info"].update( {"user_name_admin": message.from_user.username})
         dict_lot["lot_info"].update({'photo':photo1})
@@ -213,7 +215,7 @@ def photo_lot(message):
 
     else:
         msg = bot.send_message(message.chat.id,
-                               "что-то пошло не так, попробуй снова\nДля выхода пришли '/stop'\nДля обновления карточки пришли '/new_lot'")
+                               "Ты неверно написал, напиши снова или\nДля выхода пришли '/stop'\nДля обновления карточки пришли '/new_lot'")
         bot.register_next_step_handler(msg, photo_lot)
 
 def convert_sec(times):
@@ -250,6 +252,13 @@ def time_lot(call_id,data):
     else:
         bot.answer_callback_query(call_id, "Аукцион уже закончен, участие невозможно,\n посмотрите другие лоты" , show_alert=False)
 
+def stavka_back(call_id,b):
+    a = datetime.now()
+    if b>a:
+        bot.answer_callback_query(call_id, "Ставка отменена успешно", show_alert=False)
+    else:
+        bot.answer_callback_query(call_id, "Ставкy отменить невозможно", show_alert=False)
+
 def information(call_id):
     bot.answer_callback_query(call_id, "Ставку можно отменить в течении 1 минуты, нажав на кнопку Отмена."
                                        "Выигранный лот необходимо выкупить в течении 5 дней, в противном случае БАН на 5 дней!!!", show_alert=True)
@@ -282,7 +291,9 @@ def call(call):
         dict_lot.clear()
 
     if flag=="ly":
+        print(call.data)
         id_l=(call.data)[2:]
+
         bot.send_message(id, " Ваша ставка принята",reply_markup=stavka1(id_l))
 
     if flag == "lt":
@@ -292,6 +303,15 @@ def call(call):
 
     if flag == "li":
         information(call.id)
+
+    if flag == "la":
+        print(data)
+
+    if flag == "lb":
+        b = datetime.now() + timedelta(minutes=1)
+
+        print(b)
+        stavka_back(call.id,b)
 
 
 

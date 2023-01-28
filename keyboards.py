@@ -93,10 +93,8 @@ def arhive_lots_keyboard(arhive_lots_list, page_number):
 def stavka(id_l):
     stavka_keyboard = InlineKeyboardMarkup()
     button_one = (InlineKeyboardButton("Участвовать", callback_data="ly"+str(id_l)))
-
     button_four = (InlineKeyboardButton("Время", callback_data="lt" + str(id_l)))
     button_five = (InlineKeyboardButton("Информация", callback_data="li"))
-
     stavka_keyboard.add( button_one,button_four,button_five)
     return stavka_keyboard
 
@@ -105,26 +103,49 @@ def stavka1(id_l):
     dict_lot = json.loads(f.read())
     f.close()
     min_stavka=""
+    type_stavka=""
+    start_price=""
     for z in dict_lot:
         for x in dict_lot[z]:
             if x == "min_stavka":
                 min_stavka = int(dict_lot[z][x])
+            if x==    "type_stavka":
+                type_stavka=int(dict_lot[z][x])
+            if x== "start_price":
+                start_price=int(dict_lot[z][x])
     print(min_stavka)
 
-    stavka_keyboard = InlineKeyboardMarkup()
-    #button_list = [InlineKeyboardButton(text=x, callback_data="lf") for x in list]
-    button_1 = (InlineKeyboardButton(str(min_stavka), callback_data="la"+str(id_l)))
-    button_2 = (InlineKeyboardButton(str(min_stavka*min_stavka), callback_data="la"))
-    button_3 = (InlineKeyboardButton(str(min_stavka*min_stavka*min_stavka), callback_data="la"))
-    button_4=(InlineKeyboardButton(str(min_stavka*10),callback_data="la"))
-    button_5 = (InlineKeyboardButton(str(min_stavka*min_stavka*10), callback_data="la"))
-    button_6 = (InlineKeyboardButton(str(min_stavka*min_stavka*min_stavka*10), callback_data="la"))
-    button_7 = (InlineKeyboardButton("Автоставка", callback_data="la"+str(id_l) ))
-    button_8 = (InlineKeyboardButton("Отменить", callback_data="lb"+str(id_l)))
-    button_9 = (InlineKeyboardButton("Время", callback_data="lt"+str(id_l) ))
-    button_10 = (InlineKeyboardButton("Информация", callback_data="li"))
-    #stavka_keyboard.add(*button_list, button_one,button_two,button_tree,lbutton_four,button_five)
-    stavka_keyboard.add(button_1,button_2,button_3,button_4,button_5,button_6,button_7,button_8,button_9,button_10)
+    if type_stavka !=1:
+        stavka_keyboard = InlineKeyboardMarkup()
+        button_1 = (InlineKeyboardButton("+"+str(min_stavka), callback_data="la"+str(id_l)))
+        button_2 = (InlineKeyboardButton("+"+str(min_stavka*min_stavka), callback_data="la"+str(id_l)))
+        button_3 = (InlineKeyboardButton("+"+str(min_stavka*min_stavka*min_stavka), callback_data="la"+str(id_l)))
+        button_4=  (InlineKeyboardButton("+"+str(min_stavka*10),callback_data="la"+str(id_l)))
+        button_5 = (InlineKeyboardButton("+"+str(min_stavka*min_stavka*10), callback_data="la"+str(id_l)))
+        button_6 = (InlineKeyboardButton("+"+str(min_stavka*min_stavka*min_stavka*10), callback_data="la"+str(id_l)))
+        button_7 = (InlineKeyboardButton("Автоставка", callback_data="lh"+str(id_l) ))
+        button_8 = (InlineKeyboardButton("Отменить", callback_data="lb"+str(id_l)))
+        button_9 = (InlineKeyboardButton("Время", callback_data="lt"+str(id_l) ))
+        button_10 = (InlineKeyboardButton("Информация", callback_data="li"))
+        stavka_keyboard.add(button_1,button_2,button_3,button_4,button_5,button_6,button_7,button_8,button_9,button_10)
+
+
+    else:
+        list1=[]
+        x=2.5
+        while len(list1)<6:
+            if start_price*x//100>min_stavka :
+                list1.append(x)
+            x+=2.5
+        print(list1)
+        stavka_keyboard = InlineKeyboardMarkup()
+        button_list = [InlineKeyboardButton(text=str(x)+"%", callback_data="lf") for x in list1]
+        button_7 = (InlineKeyboardButton("Автоставка", callback_data="lh" + str(id_l)))
+        button_8 = (InlineKeyboardButton("Отменить", callback_data="lb" + str(id_l)))
+        button_9 = (InlineKeyboardButton("Время", callback_data="lt" + str(id_l)))
+        button_10 = (InlineKeyboardButton("Информация", callback_data="li"))
+        stavka_keyboard.add(*button_list, button_7,button_8,button_9,button_10)
+
 
     return stavka_keyboard
 
@@ -132,7 +153,7 @@ def stavka1(id_l):
 def stavka_canal(id_l):
     lot_keyboard = InlineKeyboardMarkup()
     button_tree = (InlineKeyboardButton("Участвовать",url="https://t.me/aminokislotnik_bot?start="+str(id_l), callback_data="ly"))
-    button_four = (InlineKeyboardButton("время", callback_data="lt*"+str(id_l)))
+    button_four = (InlineKeyboardButton("время", callback_data="lt"+str(id_l)))
     button_five = (InlineKeyboardButton("Информация", callback_data="li"))
     lot_keyboard.add(button_tree,button_four,button_five)
     return lot_keyboard

@@ -13,8 +13,9 @@ def post_lots(id_lot):
     f.close()
     buf=''
     photo=""
-    min_stavka=0
+    min_stavka=''
     times=''
+    start_price=''
     for z in dict_lot:
         for x in dict_lot[z]:
             if x=='lot_name':
@@ -29,8 +30,11 @@ def post_lots(id_lot):
                 min_stavka=dict_lot[z][x]
             if x=="time_create":
                 times=dict_lot[z][x]
+            if x=="start_price":
+                start_price=dict_lot[z][x]
+
     print(photo,min_stavka)
-    return buf,photo,times
+    return buf,photo,times,min_stavka,start_price
 
 
 
