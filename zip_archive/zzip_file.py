@@ -5,7 +5,7 @@ import threading
 
 zip_path = 'C:\\Новая папка\\git_auktion' # путь по которому созоется файл.zip(нужно указать свой путь)
 zip_paht_del = 'C:\\Новая папка\\git_auktion' # удаляет в архиве весь путь сохраняя структуру(чтоб не создавались лишние папки)
-def arhiv():
+def arhiv(time_):
     while True:
         t = time.ctime()
         file_zip = zipfile.ZipFile(f'{str("дата: "+t[0:10]+t[19:]+" время: "+t[10:19]).replace(" ",":").replace(":", ".")}.zip', 'w')
@@ -20,9 +20,9 @@ def arhiv():
 
         file_zip.close()
         print(file_zip)
-        time.sleep(100)
+        time.sleep(time_)
 
-t = threading.Thread(target=arhiv())
+t = threading.Thread(target=arhiv, args=(100,))# 100 время на которое функция засыпает
 t.start()
 
 
