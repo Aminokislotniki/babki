@@ -265,6 +265,7 @@ def information(call_id):
 @bot.callback_query_handler(func=lambda call: True)
 def call(call):
     id = call.message.chat.id
+    user_name = call.message.chat.username
     flag =fs_serj(call.data)
     data = dt_serj (call.data)
     # bot.answer_callback_query(callback_query_id=call.id)
@@ -305,7 +306,10 @@ def call(call):
         information(call.id)
 
     if flag == "la":
+        data = (call.data)[2:]
         print(data)
+        print(user_name)
+
 
     if flag == "lb":
         b = datetime.now() + timedelta(minutes=1)
