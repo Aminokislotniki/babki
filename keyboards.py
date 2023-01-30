@@ -157,6 +157,7 @@ def stavka_canal(id_l):
     lot_keyboard.add(button_tree,button_four,button_five)
     return lot_keyboard
 
+
 def keyboard_lot_bot():
     keyboard_lot_bot = InlineKeyboardMarkup()
     button_1 = (InlineKeyboardButton("Опубликовать", callback_data="ls"))

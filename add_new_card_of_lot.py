@@ -156,6 +156,7 @@ def min_stavka(message):
         bot.register_next_step_handler(msg, min_stavka)
 
 
+
 def type_stavka(message):
     if message.text == "/new_lot":
         msg = bot.send_message(message.chat.id, "Начнём с начала.  Пришли название лота")
