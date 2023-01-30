@@ -1,6 +1,6 @@
 import json
-from babki.keyboards import edit_card_keyboard
-from keyboards import quit_only_keyboard
+from keyboards import edit_card_keyboard
+#from keyboards import quit_only_keyboard
 
 
 def dt_serj(s):

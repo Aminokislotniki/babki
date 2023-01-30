@@ -196,6 +196,15 @@ def call(call):
             bot.register_next_step_handler(alert_before_post, post_to_channel_by_id, lot_id, bot)
 
 
+
+
+
+
+
+
+
+
+
 print("Ready")
 bot.infinity_polling()
 
