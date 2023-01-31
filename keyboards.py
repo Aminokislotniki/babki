@@ -130,7 +130,7 @@ def stavka1(data):
         stavka_keyboard.add(button_1,button_2,button_3,button_4,button_5,button_6,button_7,button_8,button_9,button_10)
 
     else:
-        actual_price=""
+
         list1=[]
         i=2.5
         while len(list1)<6 :

@@ -207,7 +207,6 @@ def min_stavka(message):
         bot.register_next_step_handler(msg, min_stavka)
 
 
-
 def type_stavka(message):
     if message.text == "/new_lot":
         msg = bot.send_message(message.chat.id, "Начнём с начала.  Пришли название лота")
@@ -303,28 +302,28 @@ def stavka_back(call_id,data):
     for z in dict_lot:
         if z=="history_bets":
             mas_bets=dict_lot[z]
-    print(mas_bets)
+
     for x in mas_bets:
         t=int(time.time())
-        for i in range(len(mas_bets)-1,-1,-1):
+        for i in mas_bets:
+            #print(i)
             if t-x[3]<60 :
                 print(x)
-                del mas_bets[i]
-        #if (int(time.time())-x[3])<300:
+                del mas_bets[-1]
 
-            # bot.send_photo(call_id, dict_lot["lot_info"]["photo"], caption=dict_lot["lot_info"]["lot_name"]+"\n"+str(dict_lot["lot_info"]["start_price"])+"\n",
-            #                 reply_markup=stavka1(data))
-            #bot.delete_message(call.message.chat.id, call.message.message_id)
+            bot.send_photo(call_id, dict_lot["lot_info"]["photo"], caption=dict_lot["lot_info"]["lot_name"]+"\n"+str(dict_lot["lot_info"]["start_price"])+"\n",
+                            reply_markup=stavka1(data))
+            bot.delete_message(call.message.chat.id, call.message.message_id)
 
             bot.answer_callback_query(call_id, "Ставка отменена успешно", show_alert=False)
 
-            # for i in range(len(mas_bets)-1,-1,-1):
-            #     print(mas_bets[i])
-            #     del mas_bets[i]
+
 
         else:
             bot.answer_callback_query(call_id, "Ставкy отменить невозможно", show_alert=False)
     print(mas_bets)
+
+
 def information(call_id):
     bot.answer_callback_query(call_id, "Ставку можно отменить в течении 1 минуты, нажав на кнопку Отмена."
                                        "Выигранный лот необходимо выкупить в течении 5 дней, в противном случае БАН на 5 дней!!!", show_alert=True)
@@ -333,23 +332,30 @@ def information(call_id):
 def stavka_lot(call_id,user_name,id,data):
     #time_stavka = datetime.now() + timedelta(minutes=1)
     time_stavka = (int(time.time()))
-    print(time_stavka)
+    #print(time_stavka)
     start_price = ""
     f = open('lots/' + str(data) + '.json', 'r', encoding='utf-8')
     dict_lot = json.loads(f.read())
     f.close()
     for z in dict_lot:
+        if z=="history_bets":
+            mas_bets=dict_lot[z]
         for x in dict_lot[z]:
             if x == "start_price":
                 start_price = int(dict_lot[z][x])
-    dict_lot["lot_info"]["actual_price"] = start_price
-    dict_lot["history_bets"].append([id,user_name,start_price,time_stavka])
+    if  len(mas_bets)==0:
+        dict_lot["lot_info"]["actual_price"] = start_price
+        dict_lot["history_bets"].append([id,user_name,start_price,time_stavka])
 
-    with open('lots/' + str(data) + '.json', 'w', encoding='utf-8') as f:
-        json.dump(dict_lot, f, ensure_ascii=False, indent=15)
-    user_name = user_name[0:3] + "***"
-    bot.send_photo(call_id, dict_lot["lot_info"]["photo"], caption=dict_lot["lot_info"]["lot_name"]+"\n"+str(dict_lot["lot_info"]["start_price"])+"\n"+str(start_price) + user_name, reply_markup=stavka1(data))
-
+        with open('lots/' + str(data) + '.json', 'w', encoding='utf-8') as f:
+            json.dump(dict_lot, f, ensure_ascii=False, indent=15)
+        user_name = user_name[0:3] + "***"
+        bot.send_photo(call_id, dict_lot["lot_info"]["photo"], caption=dict_lot["lot_info"]["lot_name"]+"\n"+str(dict_lot["lot_info"]["start_price"])+"\n"+str(start_price) + user_name, reply_markup=stavka1(data))
+    else:
+        bot.send_photo(call_id, dict_lot["lot_info"]["photo"],
+                       caption=dict_lot["lot_info"]["lot_name"] + "\n" + str(
+                           dict_lot["lot_info"]["start_price"]) + "\n" + str(start_price) + user_name,
+                       reply_markup=stavka1(data))
     # bot.send_photo(id_chanel, dict_lot["lot_info"]["photo"], caption=dict_lot["lot_info"]["lot_name"]+"\n"+str(dict_lot["lot_info"]["start_price"])+"\n"+
     #                                                                  str(start_price) + user_name, reply_markup=stavka(data))
 
@@ -407,7 +413,12 @@ def dinamic_stavka(mas_st,user_name,call_id,id):
     #                  reply_markup=stavka1(mas_st[0]))
     bot.send_photo(call_id, dict_lot["lot_info"]["photo"], caption=dict_lot["lot_info"]["lot_name"]+"\n"+str(dict_lot["lot_info"]["start_price"])
                                                                    +"\n"+str(actual_price_new) + user_name,reply_markup=stavka1(mas_st[0]))
-def avtostavka(id,data,call_id,user_name):
+
+
+@bot.message_handler(commands=['text'])
+def avtostavka(id,data,call_id,user_name,message):
+    print(message)
+
     f = open('lots/' + str(data) + '.json', 'r', encoding='utf-8')
     dict_lot = json.loads(f.read())
     f.close()
@@ -418,19 +429,20 @@ def avtostavka(id,data,call_id,user_name):
     c=(len(mas_bets)-1)
     print(mas_bets[c])
     for i in mas_bets[c]:
-        if id !=i:
+        if id ==i:
             stavka_new=(mas_bets[c][2])+10
             print(stavka_new)
             time_stavka = (int(time.time()))
             mas_bets.append([id, user_name, stavka_new,time_stavka])
-            dict_lot["history_bets"] = mas_bets 
+            dict_lot["history_bets"] = mas_bets
+
             with open('lots/' + str(data) + '.json', 'w', encoding='utf-8') as f:
                 json.dump(dict_lot, f, ensure_ascii=False, indent=15)
             user_name = user_name[0:3] + "***"
-            bot.send_message(call_id, " Ваша ставка принята\n " + str(stavka_new) + user_name,
-                             reply_markup=stavka1(data))
-        else:
-            bot.send_message(call_id, " Ваша ставка и так последняя\n ")
+            # bot.send_message(call_id, " Ваша ставка принята\n " + str(stavka_new) + user_name,
+            #                  reply_markup=stavka1(data))
+        # else:
+            # bot.send_message(call_id, " Ваша ставка и так последняя\n ")
 
 @bot.callback_query_handler(func=lambda call: True)
 def call(call):
@@ -525,9 +537,9 @@ def call(call):
         bot.answer_callback_query(callback_query_id=call.id)
         print(id)
         print(data)
-        avtostavka(id,data,call.id,user_name)
+        bot.send_message(call.message.chat.id, "Введи максимальную сумму")
+        #avtostavka(id,data,call.id,user_name)
 #bot.send_photo(2077212957,"AgACAgIAAxkBAAIicGPLzbi0TdFyeMpjwj90yzAsu7mBAAI_xTEbO7VhSiazPrxb8uMrAQADAgADeQADLQQ",caption="dd")
-
 
 
 

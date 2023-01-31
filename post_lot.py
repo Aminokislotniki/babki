@@ -19,11 +19,15 @@ def post_lots(id_lot):
     for z in dict_lot:
         for x in dict_lot[z]:
             if x=='lot_name':
-                buf+=(dict_lot[z][x])+"\n"
+                buf+="Название: "+ (dict_lot[z][x])+"\n"
             if x=="description":
-                buf+=(dict_lot[z][x])+"\n"
+                buf+="Описание: "+(dict_lot[z][x])+"\n"
+            if x == "city":
+                buf += "Город: " + (dict_lot[z][x]) + "\n"
+            if x=="delivery terms":
+                buf+="Условия доставки: "+(dict_lot[z][x])+"\n"
             if x=="start_price" and z=="lot_info":
-                buf+='Цена:'+str(dict_lot[z][x])
+                buf+='Цена: '+str(dict_lot[z][x])
             if x=="photo":
                 photo=(dict_lot[z][x])
             if x=="min_stavka":
