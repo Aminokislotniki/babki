@@ -73,7 +73,7 @@ def lot(message):
         dict_lot["lot_info"]={}
         dict_lot["lot_info"].update({"lot_name":message.text})
         bot.send_message(message.chat.id, lot_obj_lot(lot_init_dict[message.chat.id]))
-        bot.delete_message(message.chat.id, message.message_id)
+        #bot.delete_message(message.chat.id, message.message_id)
         bot.delete_message(message.chat.id, message.message_id-1)
         bot.delete_message(message.chat.id, message.message_id - 2)
         msg = bot.send_message(message.chat.id, "Теперь отправьте описание лота")
@@ -244,7 +244,7 @@ def time_lot(call_id,data):
     else:
         bot.answer_callback_query(call_id, "Аукцион уже закончен, участие невозможно,\n посмотрите другие лоты" , show_alert=False)
 
-#cтавка отмены
+# отмены cтавка
 def stavka_back(call_id,data):
     a = datetime.now()
     f = open('lots/' + str(data) + '.json', 'r', encoding='utf-8')
@@ -253,13 +253,20 @@ def stavka_back(call_id,data):
     for z in dict_lot:
         if z=="history_bets":
             mas_bets=dict_lot[z]
-    print(mas_bets)
-            # for x in dict_lot[z]:
-            #     print(x)
-    # if b>a:
-    #     bot.answer_callback_query(call_id, "Ставка отменена успешно", show_alert=False)
-    # else:
-    #     bot.answer_callback_query(call_id, "Ставкy отменить невозможно", show_alert=False)
+    for x in mas_bets:
+        print(mas_bets)
+        if (int(time.time())-x[3])<360:
+            bot.send_photo(call_id, dict_lot["lot_info"]["photo"], caption=post_lots(data),
+                            reply_markup=stavka1(data))
+            #bot.delete_message(call.message.chat.id, call.message.message_id)
+
+            #bot.answer_callback_query(call_id, "Ставка отменена успешно", show_alert=False)
+
+            for i in range(len(mas_bets)-1,-1,-1):
+                del mas_bets[i]
+            print(mas_bets)
+        else:
+            bot.answer_callback_query(call_id, "Ставкy отменить невозможно", show_alert=False)
 
 def information(call_id):
     bot.answer_callback_query(call_id, "Ставку можно отменить в течении 1 минуты, нажав на кнопку Отмена."
@@ -267,7 +274,8 @@ def information(call_id):
 
 #ставка при первом нажатии участвовать
 def stavka_lot(call_id,user_name,id,data):
-    time_stavka = datetime.now() + timedelta(minutes=1)
+    #time_stavka = datetime.now() + timedelta(minutes=1)
+    time_stavka = (int(time.time()))
     print(time_stavka)
     start_price = ""
     f = open('lots/' + str(data) + '.json', 'r', encoding='utf-8')
@@ -278,16 +286,20 @@ def stavka_lot(call_id,user_name,id,data):
             if x == "start_price":
                 start_price = int(dict_lot[z][x])
     dict_lot["lot_info"]["actual_price"] = start_price
-    dict_lot["history_bets"].append([id,user_name,start_price])
+    dict_lot["history_bets"].append([id,user_name,start_price,time_stavka])
 
     with open('lots/' + str(data) + '.json', 'w', encoding='utf-8') as f:
         json.dump(dict_lot, f, ensure_ascii=False, indent=15)
     user_name = user_name[0:3] + "***"
-    bot.send_message(call_id, " Ваша ставка принята\n " + str(start_price) + user_name, reply_markup=stavka1(data))
+    bot.send_photo(call_id, dict_lot["lot_info"]["photo"], caption=str(post_lots(data))+str(start_price) + user_name, reply_markup=stavka1(data))
+    #bot.delete_message(call.message.chat.id, call.message.message_id)
+    #bot.send_message(call_id, " \nВаша ставка принята\n " + str(start_price) + user_name, reply_markup=stavka1(data))
 
 
 #ставка с процентами
 def percent_stavka(mas_st,user_name,call_id,id):
+    time_stavka = (int(time.time()))
+    user_name = user_name[0:3] + "***"
     actual_price = ""
     start_price = ""
     f = open('lots/' + str(mas_st[0]) + '.json', 'r', encoding='utf-8')
@@ -304,12 +316,12 @@ def percent_stavka(mas_st,user_name,call_id,id):
     print(actual_price_new)
     if actual_price_new>actual_price:
         dict_lot["lot_info"]["actual_price"] = actual_price_new
-        dict_lot["history_bets"] .append([id, user_name, actual_price_new])
+        dict_lot["history_bets"] .append([id, user_name, actual_price_new,time_stavka])
 
 
         with open('lots/' + str(mas_st[0]) + '.json', 'w', encoding='utf-8') as f:
             json.dump(dict_lot, f, ensure_ascii=False, indent=15)
-        user_name = user_name[0:3] + "***"
+
         bot.send_message(call_id, " Ваша ставка принята\n " + str(actual_price_new) + user_name, reply_markup=stavka1(mas_st[0]))
     else:
         bot.send_message(call_id, " Ваша ставка не принята\n " + str(actual_price) + user_name,
@@ -319,7 +331,7 @@ def percent_stavka(mas_st,user_name,call_id,id):
 
 #ставка с цифрами
 def dinamic_stavka(mas_st,user_name,call_id,id):
-    #print(data_st)
+    time_stavka = (int(time.time()))
     actual_price = ""
     f = open('lots/' + str(mas_st[0]) + '.json', 'r', encoding='utf-8')
     dict_lot = json.loads(f.read())
@@ -331,7 +343,7 @@ def dinamic_stavka(mas_st,user_name,call_id,id):
     actual_price_new = int(actual_price + float(mas_st[1]))
     print(actual_price)
     dict_lot["lot_info"]["actual_price"] = actual_price_new
-    dict_lot["history_bets"] .append ([id, user_name, actual_price_new])
+    dict_lot["history_bets"] .append ([id, user_name, actual_price_new,time_stavka])
     with open('lots/' + str(mas_st[0]) + '.json', 'w', encoding='utf-8') as f:
         json.dump(dict_lot, f, ensure_ascii=False, indent=15)
     user_name = user_name[0:3] + "***"
@@ -399,6 +411,8 @@ def call(call):
         print(user_name)
         dinamic_stavka(mas_st,user_name,id,id)
 
+    if flag == "lo":
+        print(data)
     #для отмены ставки
     if flag == "lb":
         print(data)
