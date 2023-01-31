@@ -42,6 +42,8 @@ class Lot:
     def __init__(self, lot):
         self.lot = lot
         self.description = None
+        self.city=None
+        self.delivery_terms=None
         self.price = None
         self.min_stavka = None
         self.type_stavka = None
@@ -94,6 +96,53 @@ def description(message):
     elif message.content_type == "text" and message.text.replace(" ", "") != "":
         lot_init_dict[message.chat.id].description = message.text
         dict_lot["lot_info"].update({"description":message.text})
+        bot.send_message(message.chat.id, lot_obj_lot(lot_init_dict[message.chat.id]))
+        bot.delete_message(message.chat.id, message.message_id)
+        bot.delete_message(message.chat.id, message.message_id-1)
+        bot.delete_message(message.chat.id, message.message_id-2)
+        msg = bot.send_message(message.chat.id, "Теперь пришли локацию, где находиться лот")
+        bot.register_next_step_handler(msg, city)
+
+    else:
+        msg = bot.send_message(message.chat.id,
+                           "Ты неверно написал, напиши снова или\nДля выхода пришли '/stop'\nДля обновления карточки пришли '/new_lot'")
+        bot.register_next_step_handler(msg, description)
+
+def city(message):
+    if message.text == "/new_lot":
+        msg = bot.send_message(message.chat.id, "Начнём с начала. Пришли название лота")
+        bot.register_next_step_handler(msg, lot)
+
+    elif message.text == "/stop":
+        bot.send_message(message.chat.id, "Вы вышли из добaвления лота")
+
+    elif message.content_type == "text" and message.text.replace(" ", "") != "":
+        lot_init_dict[message.chat.id].city = message.text
+        dict_lot["lot_info"].update({"city":message.text})
+
+        bot.send_message(message.chat.id, lot_obj_lot(lot_init_dict[message.chat.id]))
+        bot.delete_message(message.chat.id, message.message_id)
+        bot.delete_message(message.chat.id, message.message_id-1)
+        bot.delete_message(message.chat.id, message.message_id-2)
+        msg = bot.send_message(message.chat.id, "Опиши условия доставки")
+        bot.register_next_step_handler(msg, delivery_terms)
+
+    else:
+        msg = bot.send_message(message.chat.id,
+                           "Ты неверно написал, напиши снова или\nДля выхода пришли '/stop'\nДля обновления карточки пришли '/new_lot'")
+        bot.register_next_step_handler(msg, city)
+
+def delivery_terms(message):
+    if message.text == "/new_lot":
+        msg = bot.send_message(message.chat.id, "Начнём с начала. Пришли название лота")
+        bot.register_next_step_handler(msg, lot)
+
+    elif message.text == "/stop":
+        bot.send_message(message.chat.id, "Вы вышли из добaвления лота")
+
+    elif message.content_type == "text" and message.text.replace(" ", "") != "":
+        lot_init_dict[message.chat.id].delivery_terms = message.text
+        dict_lot["lot_info"].update({"delivery terms":message.text})
         print(dict_lot)
         bot.send_message(message.chat.id, lot_obj_lot(lot_init_dict[message.chat.id]))
         bot.delete_message(message.chat.id, message.message_id)
@@ -105,7 +154,9 @@ def description(message):
     else:
         msg = bot.send_message(message.chat.id,
                            "Ты неверно написал, напиши снова или\nДля выхода пришли '/stop'\nДля обновления карточки пришли '/new_lot'")
-        bot.register_next_step_handler(msg, description)
+        bot.register_next_step_handler(msg, delivery_terms)
+
+
 
 def price(message):
     if message.text == "/new_lot":
@@ -246,7 +297,7 @@ def time_lot(call_id,data):
 
 # отмены cтавка
 def stavka_back(call_id,data):
-    a = datetime.now()
+
     f = open('lots/' + str(data) + '.json', 'r', encoding='utf-8')
     dict_lot = json.loads(f.read())
     f.close()
@@ -255,7 +306,7 @@ def stavka_back(call_id,data):
             mas_bets=dict_lot[z]
     for x in mas_bets:
         print(mas_bets)
-        if (int(time.time())-x[3])<360:
+        if (int(time.time())-x[3])<60:
             bot.send_photo(call_id, dict_lot["lot_info"]["photo"], caption=post_lots(data),
                             reply_markup=stavka1(data))
             #bot.delete_message(call.message.chat.id, call.message.message_id)
@@ -291,10 +342,12 @@ def stavka_lot(call_id,user_name,id,data):
     with open('lots/' + str(data) + '.json', 'w', encoding='utf-8') as f:
         json.dump(dict_lot, f, ensure_ascii=False, indent=15)
     user_name = user_name[0:3] + "***"
-    bot.send_photo(call_id, dict_lot["lot_info"]["photo"], caption=str(post_lots(data))+str(start_price) + user_name, reply_markup=stavka1(data))
-    #bot.delete_message(call.message.chat.id, call.message.message_id)
-    #bot.send_message(call_id, " \nВаша ставка принята\n " + str(start_price) + user_name, reply_markup=stavka1(data))
-
+    bot.send_photo(call_id, dict_lot["lot_info"]["photo"], caption=str(start_price) + user_name, reply_markup=stavka1(data))
+    #bot.delete_message(message.chat.id, message.message_id)
+    # bot.send_photo(id_chanel, dict_lot["lot_info"]["photo"], caption=str(start_price) + user_name,
+    #                reply_markup=stavka(data))
+    #bot.send_message(id_chanel, " \nВаша ставка принята\n " + str(start_price) + user_name, reply_markup=stavka(data))
+    #bot.delete_message(id_chanel.message.chanel.id, call_id.message.message_id)
 
 #ставка с процентами
 def percent_stavka(mas_st,user_name,call_id,id):
@@ -318,11 +371,11 @@ def percent_stavka(mas_st,user_name,call_id,id):
         dict_lot["lot_info"]["actual_price"] = actual_price_new
         dict_lot["history_bets"] .append([id, user_name, actual_price_new,time_stavka])
 
-
         with open('lots/' + str(mas_st[0]) + '.json', 'w', encoding='utf-8') as f:
             json.dump(dict_lot, f, ensure_ascii=False, indent=15)
-
-        bot.send_message(call_id, " Ваша ставка принята\n " + str(actual_price_new) + user_name, reply_markup=stavka1(mas_st[0]))
+        bot.send_photo(call_id, dict_lot["lot_info"]["photo"], caption=str(actual_price_new) + user_name,
+                       reply_markup=stavka1(mas_st[0]))
+        #bot.send_message(call_id, " Ваша ставка принята\n " + str(actual_price_new) + user_name, reply_markup=stavka1(mas_st[0]))
     else:
         bot.send_message(call_id, " Ваша ставка не принята\n " + str(actual_price) + user_name,
                          reply_markup=stavka1(mas_st[0]))
@@ -347,8 +400,10 @@ def dinamic_stavka(mas_st,user_name,call_id,id):
     with open('lots/' + str(mas_st[0]) + '.json', 'w', encoding='utf-8') as f:
         json.dump(dict_lot, f, ensure_ascii=False, indent=15)
     user_name = user_name[0:3] + "***"
-    bot.send_message(call_id, " Ваша ставка принята\n " + str(actual_price_new) + user_name,
-                     reply_markup=stavka1(mas_st[0]))
+    # bot.send_message(call_id, " Ваша ставка принята\n " + str(actual_price_new) + user_name,
+    #                  reply_markup=stavka1(mas_st[0]))
+    bot.send_photo(call_id, dict_lot["lot_info"]["photo"], caption=str(actual_price_new) + user_name,
+                   reply_markup=stavka1(mas_st[0]))
 
 
 @bot.callback_query_handler(func=lambda call: True)
@@ -375,6 +430,8 @@ def call(call):
         bot.send_photo(id_chanel, dict_lot ["lot_info"]["photo"], caption=post_lots(id_l), reply_markup=stavka_canal(id_l))
         bot.delete_message(call.message.chat.id,call.message.message_id)
         bot.delete_message(call.message.chat.id, call.message.message_id-1)
+        bot.send_photo(id, dict_lot["lot_info"]["photo"], caption="лот опубликован. Переходи в канал : https://t.me/projectlimonbot\n"
+                                         "для создания нового лота пришли '/new_lot'")
 
     #сборка лота
     if flag == "ld":
@@ -387,12 +444,14 @@ def call(call):
         data = (call.data)[2:]
         print(call.data)
         stavka_lot(id, user_name, id,data)
-
+        bot.delete_message(call.message.chat.id, call.message.message_id-1)
+        bot.delete_message(call.message.chat.id, call.message.message_id)
         #
     if flag == "lf":
         mas_st=data.split('!')
         print(mas_st)
         percent_stavka(mas_st,user_name,id,id)
+        bot.delete_message(call.message.chat.id, call.message.message_id)
 
     #время
     if flag == "lt":
@@ -410,8 +469,24 @@ def call(call):
         print(data)
         print(user_name)
         dinamic_stavka(mas_st,user_name,id,id)
+        bot.delete_message(call.message.chat.id, call.message.message_id)
 
     if flag == "lo":
+        bot.answer_callback_query(callback_query_id=call.id)
+        dict_lot["lot_info"].update({"actual_price": None})
+        dict_lot["service_info"].update({"message_id_in_channel": None})
+        dict_lot["service_info"].update({"status": "activ"})
+        dict_lot["service_info"].update({"time_create": None})
+        dict_lot["service_info"].update({"winner_dict": {"user_name": None, "price_final": None}})
+        dict_lot["history_bets"] = []
+        id_l = id_lot()
+        with open('lots/' + str(id_l) + '.json', 'w', encoding='utf-8') as f:
+            json.dump(dict_lot, f, ensure_ascii=False, indent=15)
+        bot.delete_message(call.message.chat.id, call.message.message_id)
+        bot.delete_message(call.message.chat.id, call.message.message_id - 1)
+        bot.send_photo(id, dict_lot["lot_info"]["photo"],
+                       caption="лот сохранен\nдля опубликования и редактирования нажми '/view_lots'.\n"
+                               "для создания нового лота пришли '/new_lot'")
         print(data)
     #для отмены ставки
     if flag == "lb":
