@@ -130,15 +130,16 @@ def stavka1(data):
         stavka_keyboard.add(button_1,button_2,button_3,button_4,button_5,button_6,button_7,button_8,button_9,button_10)
 
     else:
+        actual_price=""
         list1=[]
-        x=2.5
-        while len(list1)<6:
-            if start_price*x//100>min_stavka :
-                list1.append(x)
-            x+=2.5
-        print(list1)
+        i=2.5
+        while len(list1)<6 :
+            if int(start_price)*float(i)/100>int(min_stavka) :
+                list1.append(i)
+            i+=2.5
+
         stavka_keyboard = InlineKeyboardMarkup()
-        button_list = [InlineKeyboardButton(text=str(x)+"%", callback_data="lf"+str(data)+"!"+str(x)) for x in list1]
+        button_list = [InlineKeyboardButton(text="+ "+str(x)+" %", callback_data="lf"+str(data)+"!"+str(x)) for x in list1]
         button_7 = (InlineKeyboardButton("Автоставка", callback_data="lh" + str(data)))
         button_8 = (InlineKeyboardButton("Отменить", callback_data="lb" + str(data)))
         button_9 = (InlineKeyboardButton("Время", callback_data="lt" + str(data)))
