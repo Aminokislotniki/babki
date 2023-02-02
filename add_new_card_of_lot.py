@@ -310,13 +310,14 @@ def stavka_back(call_id,data):
             if t-x[3]<60 :
                 print(x)
                 del mas_bets[-1]
-
             bot.send_photo(call_id, dict_lot["lot_info"]["photo"], caption=dict_lot["lot_info"]["lot_name"]+"\n"+str(dict_lot["lot_info"]["start_price"])+"\n",
                             reply_markup=stavka1(data))
-            bot.delete_message(call.message.chat.id, call.message.message_id)
+            #bot.delete_message(call.message.chat.id, call.message.message_id)
 
             bot.answer_callback_query(call_id, "Ставка отменена успешно", show_alert=False)
-
+            dict_lot["history_bets"]=mas_bets
+            with open('lots/' + str(data) + '.json', 'w', encoding='utf-8') as f:
+                json.dump(dict_lot, f, ensure_ascii=False, indent=15)
 
 
         else:
@@ -356,9 +357,6 @@ def stavka_lot(call_id,user_name,id,data):
                        caption=dict_lot["lot_info"]["lot_name"] + "\n" + str(
                            dict_lot["lot_info"]["start_price"]) + "\n" + str(start_price) + user_name,
                        reply_markup=stavka1(data))
-    # bot.send_photo(id_chanel, dict_lot["lot_info"]["photo"], caption=dict_lot["lot_info"]["lot_name"]+"\n"+str(dict_lot["lot_info"]["start_price"])+"\n"+
-    #                                                                  str(start_price) + user_name, reply_markup=stavka(data))
-
 
 
 #ставка с процентами
